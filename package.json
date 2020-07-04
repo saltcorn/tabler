@@ -1,0 +1,25 @@
+{
+  "name": "@saltcorn/tabler",
+  "version": "0.1.0",
+  "description": "tabler.io layout plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@saltcorn/data": "^0.1.0",
+    "@saltcorn/markup": "^0.1.0"
+  },
+  "author": "Tom Nielsen",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "repository": "github:saltcorn/tabler",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
