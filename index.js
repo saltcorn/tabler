@@ -16,7 +16,7 @@ const {
   nav
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
-const subItem = currentUrl => item =>
+const subItem = currentUrl => item => li(
   item.link
     ? a(
         {
@@ -25,7 +25,7 @@ const subItem = currentUrl => item =>
         },
         item.label
       )
-    : h6({ class: "dropdown-header" }, item.label);
+    : h6({ class: "dropdown-header" }, item.label));
 
 const labelToId = item => text(item.label.replace(" ", ""));
 
@@ -39,42 +39,50 @@ const active = (currentUrl, item) =>
   (item.subitems &&
     item.subitems.some(si => si.link && currentUrl.startsWith(si.link)));
 
+const arrowDown=
+`<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path stroke="none" d="M0 0h24v24H0z"/>
+<polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3" />
+<line x1="12" y1="12" x2="20" y2="7.5" />
+<line x1="12" y1="12" x2="12" y2="21" />
+<line x1="12" y1="12" x2="4" y2="7.5" />
+<line x1="16" y1="5.25" x2="8" y2="9.75" /></svg>`
+
 const sideBarItem = currentUrl => item => {
   const is_active = active(currentUrl, item);
   return li(
     {
       class: [
         "nav-item",
+        is_active && "active",
         item.subitems && "dropdown"
       ]
     },
     item.link
       ? a(
-          { class: ["nav-link", is_active && "active"], href: text(item.link) },
-          p(text(item.label))
+          { class: ["nav-link"], href: text(item.link) },
+          text(item.label)
         )
         : item.subitems
         ? [
             a(
               {
-                class: ["nav-link", is_active && "active"],
+                class: ["nav-link dropdown-toggle", is_active && "active"],
                 href: "#",
                 "data-toggle": "dropdown",
-                "data-target": `#collapse${labelToId(item)}`,
-                "aria-expanded": "false",
-                "aria-controls": `collapse${labelToId(item)}`
+                role: "button",
+                "aria-expanded": "false"
               },
               //i({ class: "fas fa-fw fa-wrench" }),
-              span(text(item.label))
+              //span({class: "nav-link-icon d-md-none d-lg-inline-block"},arrowDown),
+              span({class: "nav-link-title"}, text(item.label))
             ),
-            div(
+            ul(
               {
-                class: "dropdown-menu dropdown-menu-arrow",
-                style:"position: absolute; transform: translate3d(11px, 54px, 0px); top: 0px; left: 0px; will-change: transform;",
-                "x-placement": "bottom-start"
+                class: "dropdown-menu"
               },
               
-                item.subitems.map(subItem(currentUrl))
+              item.subitems.map(subItem(currentUrl))
               
             )
           ]
@@ -89,9 +97,8 @@ const sideBarSection = currentUrl => section => [
 ];
 
 const header_sections = (brand, sections, currentUrl) =>
-  div({class:"header py-4"},
-    div({class:"container"}, 
-      div({class:"d-flex"},
+  header({class:"navbar navbar-expand-md navbar-light"},
+    div({class:"container-xl"}, 
       a(
       {
         class: "header-brand",
@@ -100,16 +107,16 @@ const header_sections = (brand, sections, currentUrl) =>
       //div({class:"sidebar-brand-icon rotate-n-15"},
       //i({class:"fas fa-laugh-wink"})),
       brand.name
-    ))
+    )
     )
   )+
-  div({class:"header collapse d-lg-flex p-0", id: "headerMenuCollapse"},
-    div({class:"container"}, 
-      div({class:"row align-items-center"},
-        div({class:"col-lg order-lg-first"},
+  div({class:"navbar-expand-md"},
+    div({class:"collapse navbar-collapse", id: "navbar-menu"}, 
+      div({class:"navbar navbar-light"},
+        div({class:"container-xl"},
          ul(
           {
-            class: "nav nav-tabs border-0 flex-column flex-lg-row",            
+            class: "navbar-nav",            
           },
           sections.map(sideBarSection(currentUrl))
         ))
@@ -189,6 +196,8 @@ const wrap = ({
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/css/tabler.min.css" 
           integrity="sha256-pqiuW1qcWlMprs8p96Yvsxp5Cq9C8duKeqWJInj7mJ8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/css/demo.css"
+          integrity="sha256-rrFPr4Wz73pzeQp+IK0WtD0Nak6H77E73xWlU68Q7xk=" crossorigin="anonymous">
     ${headers
       .filter(h => h.css)
       .map(h => `<link href="${h.css}" rel="stylesheet">`)
@@ -201,16 +210,14 @@ const wrap = ({
   </head>
   <body>
     <div id="page">
-      <div id="flex-fill">
         ${header_sections(brand, menu, currentUrl)}
 
-        <div class="my-3 my-md-5">
-            <div class="container">
+        <div class="content">
+            <div class="container-xl">
               ${alerts.map(a => alert(a.type, a.msg)).join("")}
               ${renderBody(title, body)}
             </div>
         </div>
-      </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
