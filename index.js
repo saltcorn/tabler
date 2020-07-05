@@ -1,3 +1,5 @@
+// implementing https://preview-dev.tabler.io/index.html
+
 const {
   ul,
   li,
@@ -7,7 +9,7 @@ const {
   div,
   text,
   i,
-  h6,
+  h6,h2,
   h1,
   p,
   header,
@@ -126,8 +128,8 @@ const header_sections = (brand, sections, currentUrl) =>
 
 const blockDispatch = {
   pageHeader: ({ title, blurb }) =>
-    div(
-      h1({ class: "h3 mb-0 mt-2 text-gray-800" }, title),
+    div({class: "page-header"},
+      h2({ class: "page-title" }, title),
       blurb && p({ class: "mb-0 text-gray-800" }, blurb)
     ),
   footer: ({ contents }) =>
@@ -172,7 +174,10 @@ const renderBody = (title, body) =>
   renderLayout({
     blockDispatch,
     layout:
-      typeof body === "string" ? { type: "card", title, contents: body } : body
+      typeof body === "string" ? {above: [
+        { type: "pageHeader", title},
+        { type: "card", contents: body }
+      ]} : body
   });
 
 const wrap = ({
@@ -196,8 +201,6 @@ const wrap = ({
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/css/tabler.min.css" 
           integrity="sha256-pqiuW1qcWlMprs8p96Yvsxp5Cq9C8duKeqWJInj7mJ8=" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/css/demo.css"
-          integrity="sha256-rrFPr4Wz73pzeQp+IK0WtD0Nak6H77E73xWlU68Q7xk=" crossorigin="anonymous">
     ${headers
       .filter(h => h.css)
       .map(h => `<link href="${h.css}" rel="stylesheet">`)
