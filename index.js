@@ -17,6 +17,7 @@ const {
   header,
   footer,
   mkTag,
+  button,
   nav
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
@@ -98,6 +99,15 @@ const header_sections = (brand, sections, currentUrl) =>
     { class: "navbar navbar-expand-md navbar-light" },
     div(
       { class: "container-xl" },
+      button(
+        {
+          class: "navbar-toggler",
+          type: "button",
+          "data-toggle": "collapse",
+          "data-target": "#navbar-menu"
+        },
+        span({ class: "navbar-toggler-icon" })
+      ),
       a(
         {
           class: "header-brand",
