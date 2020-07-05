@@ -16,21 +16,16 @@ const {
   nav
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
-const aside = mkTag("aside");
 const subItem = currentUrl => item =>
-  li(
-    { class: "nav-item" },
-    item.link
-      ? a(
-          {
-            class: ["nav-link", active(currentUrl, item) && "active"],
-            href: text(item.link)
-          },
-          i({ class: "far fa-circle nav-icon" }),
-          p(item.label)
-        )
-      : h6({ class: "collapse-header" }, item.label)
-  );
+  item.link
+    ? a(
+        {
+          class: ["dropdown-item", active(currentUrl, item) && "active"],
+          href: text(item.link)
+        },
+        item.label
+      )
+    : h6({ class: "dropdown-header" }, item.label);
 
 const labelToId = item => text(item.label.replace(" ", ""));
 
@@ -50,8 +45,7 @@ const sideBarItem = currentUrl => item => {
     {
       class: [
         "nav-item",
-        item.subitems && "has-treeview",
-        item.subitems && is_active && "menu-open"
+        item.subitems && "dropdown"
       ]
     },
     item.link
@@ -59,59 +53,66 @@ const sideBarItem = currentUrl => item => {
           { class: ["nav-link", is_active && "active"], href: text(item.link) },
           p(text(item.label))
         )
-      : item.subitems
-      ? [
-          a(
-            {
-              class: ["nav-link", is_active && "active"],
-              href: "#"
-            },
-            //i({ class: "fas fa-fw fa-wrench" }),
-            p(text(item.label), i({ class: "right fas fa-angle-left" }))
-          ),
-          ul(
-            {
-              class: ["nav nav-treeview"]
-            },
-            item.subitems.map(subItem(currentUrl))
-          )
-        ]
-      : span({ class: "nav-link" }, text(item.label))
+        : item.subitems
+        ? [
+            a(
+              {
+                class: ["nav-link", is_active && "active"],
+                href: "#",
+                "data-toggle": "dropdown",
+                "data-target": `#collapse${labelToId(item)}`,
+                "aria-expanded": "false",
+                "aria-controls": `collapse${labelToId(item)}`
+              },
+              //i({ class: "fas fa-fw fa-wrench" }),
+              span(text(item.label))
+            ),
+            div(
+              {
+                class: "dropdown-menu dropdown-menu-arrow",
+                style:"position: absolute; transform: translate3d(11px, 54px, 0px); top: 0px; left: 0px; will-change: transform;",
+                "x-placement": "bottom-start"
+              },
+              
+                item.subitems.map(subItem(currentUrl))
+              
+            )
+          ]
+        : span({ class: "nav-link" }, text(item.label))
   );
 };
 
 const sideBarSection = currentUrl => section => [
-  section.section &&
-    li({ class: "nav-header text-uppercase" }, section.section),
+  //section.section &&
+  //  li({ class: "nav-header text-uppercase" }, section.section),
   section.items.map(sideBarItem(currentUrl)).join("")
 ];
 
-const sidebar = (brand, sections, currentUrl) =>
-  aside(
-    { class: "main-sidebar sidebar-dark-primary elevation-4" },
-    a(
+const header_sections = (brand, sections, currentUrl) =>
+  div({class:"header py-4"},
+    div({class:"container"}, 
+      div({class:"d-flex"},
+      a(
       {
-        class: "brand-link",
+        class: "header-brand",
         href: "/"
       },
       //div({class:"sidebar-brand-icon rotate-n-15"},
       //i({class:"fas fa-laugh-wink"})),
-      span({ class: "brand-text font-weight-light" }, brand.name)
-    ),
-    div(
-      { class: "sidebar" },
-      nav(
-        { class: "mt-2" },
-        ul(
+      brand.name
+    ))
+    )
+  )+
+  div({class:"header collapse d-lg-flex p-0", id: "headerMenuCollapse"},
+    div({class:"container"}, 
+      div({class:"row align-items-center"},
+        div({class:"col-lg order-lg-first"},
+         ul(
           {
-            class: "nav nav-pills nav-sidebar flex-column",
-            "data-widget": "treeview",
-            role: "menu",
-            "data-accordion": "false",
-            id: "accordionSidebar"
+            class: "nav nav-tabs border-0 flex-column flex-lg-row",            
           },
           sections.map(sideBarSection(currentUrl))
-        )
+        ))
       )
     )
   );
@@ -198,16 +199,16 @@ const wrap = ({
       .join("")}
     <title>${text(title)}</title>
   </head>
-  <body id="page-top" class="hold-transition sidebar-mini layout-fixed">
-    <div id="wrapper">
-      ${sidebar(brand, menu, currentUrl)}
+  <body>
+    <div id="page">
+      <div id="flex-fill">
+        ${header_sections(brand, menu, currentUrl)}
 
-      <div class="content-wrapper">
-        <section id="content">
-          <div class="container-fluid">
-            ${alerts.map(a => alert(a.type, a.msg)).join("")}
-            ${renderBody(title, body)}
-          </div>
+        <div class="my-3 my-md-5">
+            <div class="container">
+              ${alerts.map(a => alert(a.type, a.msg)).join("")}
+              ${renderBody(title, body)}
+            </div>
         </div>
       </div>
     </div>
