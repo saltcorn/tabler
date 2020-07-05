@@ -27,7 +27,7 @@ const subItem = currentUrl => item => li(
         },
         item.label
       )
-    : h6({ class: "dropdown-header" }, item.label));
+    : span({ class: "dropdown-header" }, item.label));
 
 const labelToId = item => text(item.label.replace(" ", ""));
 
@@ -69,7 +69,7 @@ const sideBarItem = currentUrl => item => {
         ? [
             a(
               {
-                class: ["nav-link dropdown-toggle", is_active && "active"],
+                class: "nav-link dropdown-toggle",
                 href: "#",
                 "data-toggle": "dropdown",
                 role: "button",
@@ -223,7 +223,7 @@ const wrap = ({
       .join("")}
     <title>${text(title)}</title>
   </head>
-  <body>
+  <body class="antialiased">
     <div id="page">
         ${header_sections(brand, menu, currentUrl)}
 
@@ -239,13 +239,15 @@ const wrap = ({
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
             crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.0.7/vendor/bootstrap/js/bootstrap.bundle.min.js" integrity="sha256-fzFFyH01cBVPYzl16KT40wqjhgPtq6FFUB6ckN2+GGw=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+     crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" 
+      integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" 
+      crossorigin="anonymous"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.0.7/vendor/jquery-easing/jquery.easing.min.js" integrity="sha256-H3cjtrm/ztDeuhCN9I4yh4iN2Ybx/y1RM7rMmAesA0k=" crossorigin="anonymous"></script>
   
-    <script src="https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/js/tabler.min.js" 
-            integrity="sha256-lr8FqPNz4evR1M4/FBrpwOJ8G7dcD9Em7MHOhTXaAKc=" crossorigin="anonymous"></script>
     ${headers
       .filter(h => h.script)
       .map(
