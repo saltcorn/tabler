@@ -9,7 +9,7 @@ const {
   div,
   text,
   i,
-  h6,h2,
+  h6,h2,h3,
   h1,
   p,
   header,
@@ -132,6 +132,18 @@ const blockDispatch = {
       h2({ class: "page-title" }, title),
       blurb && p({ class: "mb-0 text-gray-800" }, blurb)
     ),
+  card: ({title, contents}, go)=> div(
+    { class: "card" },
+    title &&
+      div(
+        { class: "card-header" },
+        h3(
+          { class: "card-title" },
+          text(title)
+        )
+      ),
+    div({ class: "card-body" }, go(contents))
+  ),
   footer: ({ contents }) =>
     div(
       { class: "container" },
