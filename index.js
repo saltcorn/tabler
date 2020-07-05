@@ -9,7 +9,9 @@ const {
   div,
   text,
   i,
-  h6,h2,h3,
+  h6,
+  h2,
+  h3,
   h1,
   p,
   header,
@@ -18,16 +20,18 @@ const {
   nav
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
-const subItem = currentUrl => item => li(
-  item.link
-    ? a(
-        {
-          class: ["dropdown-item", active(currentUrl, item) && "active"],
-          href: text(item.link)
-        },
-        item.label
-      )
-    : span({ class: "dropdown-header" }, item.label));
+const subItem = currentUrl => item =>
+  li(
+    item.link
+      ? a(
+          {
+            class: ["dropdown-item", active(currentUrl, item) && "active"],
+            href: text(item.link)
+          },
+          item.label
+        )
+      : span({ class: "dropdown-header" }, item.label)
+  );
 
 const labelToId = item => text(item.label.replace(" ", ""));
 
@@ -41,54 +45,45 @@ const active = (currentUrl, item) =>
   (item.subitems &&
     item.subitems.some(si => si.link && currentUrl.startsWith(si.link)));
 
-const arrowDown=
-`<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+const arrowDown = `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 <path stroke="none" d="M0 0h24v24H0z"/>
 <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3" />
 <line x1="12" y1="12" x2="20" y2="7.5" />
 <line x1="12" y1="12" x2="12" y2="21" />
 <line x1="12" y1="12" x2="4" y2="7.5" />
-<line x1="16" y1="5.25" x2="8" y2="9.75" /></svg>`
+<line x1="16" y1="5.25" x2="8" y2="9.75" /></svg>`;
 
 const sideBarItem = currentUrl => item => {
   const is_active = active(currentUrl, item);
   return li(
     {
-      class: [
-        "nav-item",
-        is_active && "active",
-        item.subitems && "dropdown"
-      ]
+      class: ["nav-item", is_active && "active", item.subitems && "dropdown"]
     },
     item.link
-      ? a(
-          { class: ["nav-link"], href: text(item.link) },
-          text(item.label)
-        )
-        : item.subitems
-        ? [
-            a(
-              {
-                class: "nav-link dropdown-toggle",
-                href: "#",
-                "data-toggle": "dropdown",
-                role: "button",
-                "aria-expanded": "false"
-              },
-              //i({ class: "fas fa-fw fa-wrench" }),
-              //span({class: "nav-link-icon d-md-none d-lg-inline-block"},arrowDown),
-              span({class: "nav-link-title"}, text(item.label))
-            ),
-            ul(
-              {
-                class: "dropdown-menu"
-              },
-              
-              item.subitems.map(subItem(currentUrl))
-              
-            )
-          ]
-        : span({ class: "nav-link" }, text(item.label))
+      ? a({ class: ["nav-link"], href: text(item.link) }, text(item.label))
+      : item.subitems
+      ? [
+          a(
+            {
+              class: "nav-link dropdown-toggle",
+              href: "#",
+              "data-toggle": "dropdown",
+              role: "button",
+              "aria-expanded": "false"
+            },
+            //i({ class: "fas fa-fw fa-wrench" }),
+            //span({class: "nav-link-icon d-md-none d-lg-inline-block"},arrowDown),
+            span({ class: "nav-link-title" }, text(item.label))
+          ),
+          ul(
+            {
+              class: "dropdown-menu"
+            },
+
+            item.subitems.map(subItem(currentUrl))
+          )
+        ]
+      : span({ class: "nav-link" }, text(item.label))
   );
 };
 
@@ -99,51 +94,72 @@ const sideBarSection = currentUrl => section => [
 ];
 
 const header_sections = (brand, sections, currentUrl) =>
-  header({class:"navbar navbar-expand-md navbar-light"},
-    div({class:"container-xl"}, 
+  header(
+    { class: "navbar navbar-expand-md navbar-light" },
+    div(
+      { class: "container-xl" },
       a(
-      {
-        class: "header-brand",
-        href: "/"
-      },
-      //div({class:"sidebar-brand-icon rotate-n-15"},
-      //i({class:"fas fa-laugh-wink"})),
-      brand.name
+        {
+          class: "header-brand",
+          href: "/"
+        },
+        //div({class:"sidebar-brand-icon rotate-n-15"},
+        //i({class:"fas fa-laugh-wink"})),
+        brand.name
+      ),
+      div(
+        { class: "navbar-nav flex-row order-md-last" },
+        sections
+          .filter(s => s.section === "User")
+          .map(s =>
+            s.items.map(item =>
+              div(
+                { class: "nav-item" },
+                a(
+                  { class: ["nav-link"], href: text(item.link) },
+                  text(item.label)
+                )
+              )
+            )
+          )
+      )
     )
-    )
-  )+
-  div({class:"navbar-expand-md"},
-    div({class:"collapse navbar-collapse", id: "navbar-menu"}, 
-      div({class:"navbar navbar-light"},
-        div({class:"container-xl"},
-         ul(
-          {
-            class: "navbar-nav",            
-          },
-          sections.map(sideBarSection(currentUrl))
-        ))
+  ) +
+  div(
+    { class: "navbar-expand-md" },
+    div(
+      { class: "collapse navbar-collapse", id: "navbar-menu" },
+      div(
+        { class: "navbar navbar-light" },
+        div(
+          { class: "container-xl" },
+          ul(
+            {
+              class: "navbar-nav"
+            },
+            sections
+              .filter(s => s.section !== "User")
+              .map(sideBarSection(currentUrl))
+          )
+        )
       )
     )
   );
 
 const blockDispatch = {
   pageHeader: ({ title, blurb }) =>
-    div({class: "page-header"},
+    div(
+      { class: "page-header" },
       h2({ class: "page-title" }, title),
       blurb && p({ class: "mb-0 text-gray-800" }, blurb)
     ),
-  card: ({title, contents}, go)=> div(
-    { class: "card" },
-    title &&
-      div(
-        { class: "card-header" },
-        h3(
-          { class: "card-title" },
-          text(title)
-        )
-      ),
-    div({ class: "card-body" }, go(contents))
-  ),
+  card: ({ title, contents }, go) =>
+    div(
+      { class: "card" },
+      title &&
+        div({ class: "card-header" }, h3({ class: "card-title" }, text(title))),
+      div({ class: "card-body" }, go(contents))
+    ),
   footer: ({ contents }) =>
     div(
       { class: "container" },
@@ -186,10 +202,14 @@ const renderBody = (title, body) =>
   renderLayout({
     blockDispatch,
     layout:
-      typeof body === "string" ? {above: [
-        { type: "pageHeader", title},
-        { type: "card", contents: body }
-      ]} : body
+      typeof body === "string"
+        ? {
+            above: [
+              { type: "pageHeader", title },
+              { type: "card", contents: body }
+            ]
+          }
+        : body
   });
 
 const wrap = ({
