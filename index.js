@@ -18,7 +18,8 @@ const {
   footer,
   mkTag,
   button,
-  nav
+  nav,
+  img
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
 const subItem = currentUrl => item =>
@@ -110,13 +111,19 @@ const header_sections = (brand, sections, currentUrl) =>
       ),
       a(
         {
-          class: "header-brand",
-          href: "/"
+          href: ".",
+          class:
+            "navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3"
         },
-        //div({class:"sidebar-brand-icon rotate-n-15"},
-        //i({class:"fas fa-laugh-wink"})),
+        brand.logo &&
+          img({
+            src: brand.logo,
+            alt: "Logo",
+            class: "navbar-brand-image mx-1"
+          }),
         brand.name
       ),
+
       div(
         { class: "navbar-nav flex-row order-md-last" },
         sections
