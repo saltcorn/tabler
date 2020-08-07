@@ -22,6 +22,8 @@ const {
   img
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
+const { renderForm, link } = require("@saltcorn/markup");
+
 const subItem = currentUrl => item =>
   li(
     item.link
@@ -228,16 +230,7 @@ const renderBody = (title, body) =>
           }
         : body
   });
-
-const wrap = ({
-  title,
-  menu,
-  brand,
-  alerts,
-  currentUrl,
-  body,
-  headers
-}) => `<!doctype html>
+const wrapIt=(bodyAttr, headers, title, body) => `<!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -260,44 +253,125 @@ const wrap = ({
       .join("")}
     <title>${text(title)}</title>
   </head>
-  <body class="antialiased">
-    <div id="page">
-        ${header_sections(brand, menu, currentUrl)}
+  <body ${bodyAttr}>
+  ${body}
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
+          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+   integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+   crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" 
+    integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" 
+    crossorigin="anonymous"></script>
 
+  ${headers
+    .filter(h => h.script)
+    .map(
+      h =>
+        `<script src="${h.script}" ${
+          h.integrity
+            ? `integrity="${h.integrity}" crossorigin="anonymous"`
+            : ""
+        }></script>`
+    )
+    .join("")}
+</body>
+</html>`
+
+const renderAuthLinks = authLinks => {
+  var links = [];
+  if (authLinks.login)
+    links.push(link(authLinks.login, "Already have an account? Login!"));
+  if (authLinks.forgot) links.push(link(authLinks.forgot, "Forgot password?"));
+  if (authLinks.signup)
+    links.push(link(authLinks.signup, "Create an account!"));
+  if (links.length === 0) return "";
+  else return links.map(l => div({ class: "text-center text-muted" }, l)).join("");
+};
+
+const formModify = form => {
+  form.formStyle = "vert";
+  form.submitButtonClass = "btn-primary btn-user btn-block";
+  return form;
+};
+
+const authBrand = ({ name, logo }) =>
+  logo
+    ? `<div class="text-center mb-4">
+    <img src="${logo}" class="h-6" alt=""><h2 class="d-inline mx-3">${name}</h2>
+  </div>`
+    : "";
+
+const authWrap = ({
+  title,
+  alerts,
+  form,
+  afterForm,
+  brand,
+  headers,
+  csrfToken,
+  authLinks
+}) =>
+  wrapIt('', headers, title, `<div class="page">
+  <div class="page-single">
+    <div class="container">
+      <div class="row">
+        <div class="col col-login mx-auto">
+        ${alerts.map(a => alert(a.type, a.msg)).join("")}
+        ${authBrand( brand)}
+          <div class="card">
+            <div class="card-body p-5">
+              <div class="card-title">${title}</div>
+              ${renderForm(formModify(form), csrfToken)}
+            </div>
+          
+          </div>
+
+          ${renderAuthLinks(authLinks)}
+          ${afterForm}
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+  .col-login {
+    max-width: 24rem;
+  }
+  .page-single {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 1rem 0;
+}
+  </style>
+</div>`)
+
+
+const wrap = ({
+  title,
+  menu,
+  brand,
+  alerts,
+  currentUrl,
+  body,
+  headers
+}) => wrapIt('class="antialiased"', headers, title, 
+`<div id="page">
+        ${header_sections(brand, menu, currentUrl)}
         <div class="content">
             <div class="container-xl">
               ${alerts.map(a => alert(a.type, a.msg)).join("")}
               ${renderBody(title, body)}
             </div>
         </div>
-    </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
-     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
-     crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" 
-      integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" 
-      crossorigin="anonymous"></script>
-
-    <!-- Core plugin JavaScript-->
-  
-    ${headers
-      .filter(h => h.script)
-      .map(
-        h =>
-          `<script src="${h.script}" ${
-            h.integrity
-              ? `integrity="${h.integrity}" crossorigin="anonymous"`
-              : ""
-          }></script>`
-      )
-      .join("")}
-  </body>
-</html>`;
+    </div>`
+);
 
 const alert = (type, s) => {
   //console.log("alert", type, s,s.length)
@@ -312,4 +386,4 @@ const alert = (type, s) => {
     : "";
 };
 
-module.exports = { sc_plugin_api_version: 1, layout: { wrap } };
+module.exports = { sc_plugin_api_version: 1, layout: { wrap, authWrap } };
