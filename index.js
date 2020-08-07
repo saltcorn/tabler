@@ -276,6 +276,11 @@ const wrapIt=(bodyAttr, headers, title, body) => `<!doctype html>
         }></script>`
     )
     .join("")}
+    <style>
+      .form-group {
+        margin-bottom: 1rem;
+      }
+    </style>
 </body>
 </html>`
 
