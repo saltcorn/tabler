@@ -81,7 +81,7 @@ const sideBarItem = (currentUrl) => (item) => {
           ),
           ul(
             {
-              class: "dropdown-menu",
+              class: "dropdown-menu dropdown-menu-right",
             },
 
             item.subitems.map(subItem(currentUrl))
@@ -129,18 +129,8 @@ const header_sections = (brand, sections, currentUrl) =>
       div(
         { class: "navbar-nav flex-row order-md-last" },
         sections
-          .filter((s) => s.section === "User")
-          .map((s) =>
-            s.items.map((item) =>
-              div(
-                { class: "nav-item" },
-                a(
-                  { class: ["nav-link"], href: text(item.link) },
-                  text(item.label)
-                )
-              )
-            )
-          )
+          .filter((s) => s.section === "User" || s.isUser)
+          .map(sideBarSection(currentUrl))
       )
     )
   ) +
@@ -157,7 +147,7 @@ const header_sections = (brand, sections, currentUrl) =>
               class: "navbar-nav",
             },
             sections
-              .filter((s) => s.section !== "User")
+              .filter((s) => s.section !== "User" && !s.isUser)
               .map(sideBarSection(currentUrl))
           )
         )
