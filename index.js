@@ -32,6 +32,7 @@ const subItem = (currentUrl) => (item) =>
             class: ["dropdown-item", active(currentUrl, item) && "active"],
             href: text(item.link),
           },
+          item.icon ? i({ class: `fa-fw ${item.icon}` }) : "",
           item.label
         )
       : span({ class: "dropdown-header" }, item.label)
@@ -49,22 +50,23 @@ const active = (currentUrl, item) =>
   (item.subitems &&
     item.subitems.some((si) => si.link && currentUrl.startsWith(si.link)));
 
-const arrowDown = `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-<path stroke="none" d="M0 0h24v24H0z"/>
-<polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3" />
-<line x1="12" y1="12" x2="20" y2="7.5" />
-<line x1="12" y1="12" x2="12" y2="21" />
-<line x1="12" y1="12" x2="4" y2="7.5" />
-<line x1="16" y1="5.25" x2="8" y2="9.75" /></svg>`;
-
-const sideBarItem = (currentUrl) => (item) => {
+const sideBarItem = (currentUrl, nitems) => (item, ix) => {
   const is_active = active(currentUrl, item);
   return li(
     {
       class: ["nav-item", is_active && "active", item.subitems && "dropdown"],
     },
     item.link
-      ? a({ class: ["nav-link"], href: text(item.link) }, text(item.label))
+      ? a(
+          { class: ["nav-link"], href: text(item.link) },
+          item.icon
+            ? span(
+                { class: "nav-link-icon" },
+                i({ class: `fa-fw ${item.icon}` })
+              )
+            : "",
+          text(item.label)
+        )
       : item.subitems
       ? [
           a(
@@ -76,12 +78,20 @@ const sideBarItem = (currentUrl) => (item) => {
               "aria-expanded": "false",
             },
             //i({ class: "fas fa-fw fa-wrench" }),
-            //span({class: "nav-link-icon d-md-none d-lg-inline-block"},arrowDown),
+            item.icon
+              ? span(
+                  { class: "nav-link-icon" },
+                  i({ class: `fa-fw ${item.icon}` })
+                )
+              : "",
             span({ class: "nav-link-title" }, text(item.label))
           ),
           ul(
             {
-              class: "dropdown-menu dropdown-menu-right",
+              class: [
+                "dropdown-menu",
+                ix === nitems - 1 && "dropdown-menu-right",
+              ],
             },
 
             item.subitems.map(subItem(currentUrl))
@@ -94,7 +104,7 @@ const sideBarItem = (currentUrl) => (item) => {
 const sideBarSection = (currentUrl) => (section) => [
   //section.section &&
   //  li({ class: "nav-header text-uppercase" }, section.section),
-  section.items.map(sideBarItem(currentUrl)).join(""),
+  section.items.map(sideBarItem(currentUrl, section.items.length)).join(""),
 ];
 
 const header_sections = (brand, sections, currentUrl) =>
@@ -270,6 +280,10 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
     <style>
       .form-group {
         margin-bottom: 1rem;
+      }
+      .nav-link-icon {
+        margin-top: -8px;
+        margin-right: 3px;
       }
     </style>
 </body>
