@@ -56,18 +56,7 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
     {
       class: ["nav-item", is_active && "active", item.subitems && "dropdown"],
     },
-    item.link
-      ? a(
-          { class: ["nav-link"], href: text(item.link) },
-          item.icon
-            ? span(
-                { class: "nav-link-icon" },
-                i({ class: `fa-fw ${item.icon}` })
-              )
-            : "",
-          text(item.label)
-        )
-      : item.subitems
+    item.subitems
       ? [
           a(
             {
@@ -97,6 +86,17 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
             item.subitems.map(subItem(currentUrl))
           ),
         ]
+      : item.link
+      ? a(
+          { class: ["nav-link"], href: text(item.link) },
+          item.icon
+            ? span(
+                { class: "nav-link-icon" },
+                i({ class: `fa-fw ${item.icon}` })
+              )
+            : "",
+          text(item.label)
+        )
       : span({ class: "nav-link" }, text(item.label))
   );
 };
