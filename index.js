@@ -109,7 +109,7 @@ const sideBarSection = (currentUrl) => (section) => [
 
 const header_sections = (brand, sections, currentUrl) =>
   header(
-    { class: "navbar navbar-expand-md navbar-light" },
+    { class: "navbar navbar-expand-md navbar-light d-print-none" },
     div(
       { class: "container-xl" },
       button(
