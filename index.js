@@ -23,6 +23,10 @@ const {
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
 const { renderForm, link } = require("@saltcorn/markup");
+const {
+  headersInHead,
+  headersInBody,
+} = require("@saltcorn/markup/layout_utils");
 
 const subItem = (currentUrl) => (item) =>
   li(
@@ -218,9 +222,10 @@ const blockDispatch = {
       )
     ),
 };
-const renderBody = (title, body) =>
+const renderBody = (title, body, role) =>
   renderLayout({
     blockDispatch,
+    role,
     layout:
       typeof body === "string"
         ? {
@@ -244,14 +249,7 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/css/tabler.min.css" 
           integrity="sha256-pqiuW1qcWlMprs8p96Yvsxp5Cq9C8duKeqWJInj7mJ8=" crossorigin="anonymous">
-    ${headers
-      .filter((h) => h.css)
-      .map((h) => `<link href="${h.css}" rel="stylesheet">`)
-      .join("")}
-    ${headers
-      .filter((h) => h.headerTag)
-      .map((h) => h.headerTag)
-      .join("")}
+    ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}>
@@ -266,17 +264,7 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
     integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" 
     crossorigin="anonymous"></script>
 
-  ${headers
-    .filter((h) => h.script)
-    .map(
-      (h) =>
-        `<script src="${h.script}" ${
-          h.integrity
-            ? `integrity="${h.integrity}" crossorigin="anonymous"`
-            : ""
-        }></script>`
-    )
-    .join("")}
+    ${headersInBody(headers)}
     <style>
       .form-group {
         margin-bottom: 1rem;
@@ -370,7 +358,16 @@ const authWrap = ({
 </div>`
   );
 
-const wrap = ({ title, menu, brand, alerts, currentUrl, body, headers }) =>
+const wrap = ({
+  title,
+  menu,
+  brand,
+  alerts,
+  currentUrl,
+  body,
+  headers,
+  role,
+}) =>
   wrapIt(
     'class="antialiased"',
     headers,
@@ -380,7 +377,7 @@ const wrap = ({ title, menu, brand, alerts, currentUrl, body, headers }) =>
         <div class="content">
             <div class="container-xl">
               ${alerts.map((a) => alert(a.type, a.msg)).join("")}
-              ${renderBody(title, body)}
+              ${renderBody(title, body, role)}
             </div>
         </div>
     </div>`
