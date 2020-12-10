@@ -291,6 +291,22 @@ const renderAuthLinks = (authLinks) => {
       .join("");
 };
 
+const renderAuthMethodLinks = (authLinks) => {
+  const methods = authLinks.methods || [];
+  if (methods.length === 0) return "";
+  const line = div({ class: "hr-text" }, "or");
+  const buttons = methods.map(({ url, icon, label }) =>
+    div(
+      { class: "col" },
+      a(
+        { href: url, class: "btn btn-white w-100" },
+        icon || "",
+        `&nbsp;Login with ${label}`
+      )
+    )
+  );
+  return line + div({ class: "card-body" }, div({ class: "row" }, buttons));
+};
 const formModify = (form) => {
   form.formStyle = "vert";
   form.submitButtonClass = "btn-primary btn-user btn-block";
@@ -326,10 +342,11 @@ const authWrap = ({
         ${alerts.map((a) => alert(a.type, a.msg)).join("")}
         ${authBrand(brand)}
           <div class="card">
-            <div class="card-body p-5">
+            <div class="card-body">
               <div class="card-title">${title}</div>
               ${renderForm(formModify(form), csrfToken)}
             </div>
+            ${renderAuthMethodLinks(authLinks)}
           
           </div>
 
