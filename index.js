@@ -127,7 +127,7 @@ const header_sections = (brand, sections, currentUrl) =>
       ),
       a(
         {
-          href: ".",
+          href: "/",
           class:
             "navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3",
         },
