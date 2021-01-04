@@ -393,8 +393,10 @@ const wrap = ({
         ${header_sections(brand, menu, currentUrl)}
         <div class="content">
             <div class="container-xl">
+            <div id="alerts-area">
               ${alerts.map((a) => alert(a.type, a.msg)).join("")}
-              ${renderBody(title, body, role)}
+            </div>
+            ${renderBody(title, body, role)}
             </div>
         </div>
     </div>`
