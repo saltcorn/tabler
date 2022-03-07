@@ -27,6 +27,8 @@ const {
   headersInHead,
   headersInBody,
 } = require("@saltcorn/markup/layout_utils");
+const Workflow = require("@saltcorn/data/models/workflow");
+const Form = require("@saltcorn/data/models/form");
 
 const subItem = (currentUrl) => (item) =>
   li(
@@ -412,9 +414,47 @@ const alert = (type, s) => {
     : "";
 };
 
+const configuration_workflow = () =>
+  new Workflow({
+    steps: [
+      {
+        name: "settings",
+        form: async () => {
+          return new Form({
+            saveAndContinueOption: true,
+            fields: [
+              {
+                name: "in_card",
+                label: "Default content in card?",
+                type: "Bool",
+                required: true,
+              },
+              {
+                name: "menu_style",
+                label: "Menu style",
+                type: "String",
+                required: true,
+                //fieldview: "radio_group",
+                attributes: {
+                  inline: true,
+                  options: ["Top Navbar", "Side Navbar", "No Menu"],
+                },
+              },
+            ],
+          });
+        },
+      },
+    ],
+  });
+
+const layout = (config) => ({
+  wrap,
+  authWrap,
+});
+
 module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "tabler",
-
-  layout: { wrap, authWrap },
+  configuration_workflow,
+  layout,
 };
