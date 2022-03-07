@@ -415,4 +415,9 @@ const alert = (type, s) => {
     : "";
 };
 
-module.exports = { sc_plugin_api_version: 1, layout: { wrap, authWrap } };
+module.exports = {
+  sc_plugin_api_version: 1,
+  plugin_name: "tabler",
+
+  layout: { wrap, authWrap },
+};
