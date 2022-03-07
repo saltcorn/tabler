@@ -247,8 +247,7 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
     <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/css/tabler.min.css" 
-          integrity="sha256-pqiuW1qcWlMprs8p96Yvsxp5Cq9C8duKeqWJInj7mJ8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="/plugins/public/tabler/tabler.min.css">
     ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
@@ -260,9 +259,7 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" 
-    integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" 
-    crossorigin="anonymous"></script>
+  <script src="/plugins/public/tabler/tabler.min.js"></script>
 
     ${headersInBody(headers)}
     <style>
