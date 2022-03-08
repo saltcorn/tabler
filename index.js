@@ -391,7 +391,7 @@ const wrap = ({
     `<div id="page">
         ${header_sections(brand, menu, currentUrl)}
         <div class="content">
-            <div class="container-xl">
+            <div class="container-xl" id="page-inner-content">
             <div id="alerts-area">
               ${alerts.map((a) => alert(a.type, a.msg)).join("")}
             </div>
