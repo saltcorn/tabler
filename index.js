@@ -29,8 +29,10 @@ const {
 } = require("@saltcorn/markup/layout_utils");
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
+const db = require("@saltcorn/data/db");
 
 const hints = {};
+const verstring = "@" + require("./package.json").version;
 
 const subItem = (currentUrl) => (item) =>
   li(
@@ -242,22 +244,22 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/plugins/public/tabler${verstring}/fontawesome/fontawesome.min.css" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <link rel="stylesheet" href="/plugins/public/tabler/tabler.min.css">
+    <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.min.css">
     ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}>
   ${body}
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
-          integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
-          crossorigin="anonymous"></script>
+  <script src="/static_assets/${
+    db.connectObj.version_tag
+  }/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
    crossorigin="anonymous"></script>
-  <script src="/plugins/public/tabler/tabler.min.js"></script>
+  <script src="/plugins/public/tabler${verstring}/tabler.min.js"></script>
 
     ${headersInBody(headers)}
     <style>
