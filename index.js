@@ -20,6 +20,7 @@ const {
   button,
   nav,
   img,
+  aside,
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
 const { renderForm, link } = require("@saltcorn/markup");
@@ -158,7 +159,7 @@ const showBrand = (brand) =>
 const header_sections = (brand, sections, currentUrl, config) => {
   switch (config?.layout_style) {
     case "Vertical":
-      break;
+      return vertical_header_sections(brand, sections, currentUrl, config);
 
     default: //Horizontal
       const { primary, secondary } = splitPrimarySecondaryMenu(sections);
@@ -199,7 +200,7 @@ const horizontal_header_sections = (
       )
     )
   ) +
-  div(
+  header(
     { class: "navbar-expand-md" },
     div(
       { class: "collapse navbar-collapse", id: "navbar-menu" },
@@ -213,6 +214,35 @@ const horizontal_header_sections = (
             },
             primary.map(sideBarSection(currentUrl))
           )
+        )
+      )
+    )
+  );
+
+const vertical_header_sections = (brand, sections, currentUrl, config) =>
+  aside(
+    { class: "navbar navbar-vertical navbar-expand-lg d-print-none" },
+    div(
+      { class: "container-fluid" },
+      button(
+        {
+          class: "navbar-toggler",
+          type: "button",
+          "data-bs-toggle": "collapse",
+          "data-bs-target": "#navbar-menu",
+        },
+        span({ class: "navbar-toggler-icon" })
+      ),
+      showBrand(brand),
+      div(
+        { class: "navbar-nav flex-row d-lg-none" },
+        sections.map(sideBarSection(currentUrl))
+      ),
+      div(
+        { class: "collapse navbar-collapse", id: "sidebar-menu" },
+        div(
+          { class: "navbar-nav pt-lg-3" },
+          sections.map(sideBarSection(currentUrl))
         )
       )
     )
@@ -434,7 +464,7 @@ const wrap =
       title,
       `<div id="page">
         ${header_sections(brand, menu, currentUrl, config)}
-        <div class="content">
+        <div class="page-wrapper">
             <div class="container-xl" id="page-inner-content">
             <div id="alerts-area">
               ${alerts.map((a) => alert(a.type, a.msg)).join("")}
