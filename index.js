@@ -90,7 +90,7 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
             {
               class: [
                 "dropdown-menu",
-                ix === nitems - 1 && "dropdown-menu-right",
+                ix === nitems - 1 && "dropdown-menu-end",
               ],
             },
 
