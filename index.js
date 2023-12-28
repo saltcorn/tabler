@@ -162,7 +162,16 @@ const header_sections = (brand, sections, currentUrl, config) => {
       return vertical_header_sections(brand, sections, currentUrl, config);
     case "Condensed":
       return condensed_header_sections(brand, sections, currentUrl, config);
-
+    case "Combined": {
+      const { primary, secondary } = splitPrimarySecondaryMenu(sections);
+      return combined_header_sections(
+        brand,
+        primary,
+        secondary,
+        currentUrl,
+        config
+      );
+    }
     default: //Horizontal
       const { primary, secondary } = splitPrimarySecondaryMenu(sections);
       return horizontal_header_sections(
@@ -218,6 +227,35 @@ const horizontal_header_sections = (
           )
         )
       )
+    )
+  );
+
+const combined_header_sections = (
+  brand,
+  primary,
+  secondary,
+  currentUrl,
+  config
+) =>
+  vertical_header_sections(brand, primary, currentUrl, config) +
+  header(
+    { class: "navbar navbar-expand-md d-none d-lg-flex d-print-none" },
+    div(
+      { class: "container-xl" },
+      button(
+        {
+          class: "navbar-toggler",
+          type: "button",
+          "data-bs-toggle": "collapse",
+          "data-bs-target": "#navbar-menu",
+        },
+        span({ class: "navbar-toggler-icon" })
+      ),
+      div(
+        { class: "navbar-nav flex-row order-md-last" },
+        secondary.map(sideBarSection(currentUrl))
+      ),
+      div({ class: "collapse navbar-collapse", id: "navbar-menu" })
     )
   );
 
