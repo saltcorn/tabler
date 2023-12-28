@@ -160,6 +160,8 @@ const header_sections = (brand, sections, currentUrl, config) => {
   switch (config?.layout_style) {
     case "Vertical":
       return vertical_header_sections(brand, sections, currentUrl, config);
+    case "Condensed":
+      return condensed_header_sections(brand, sections, currentUrl, config);
 
     default: //Horizontal
       const { primary, secondary } = splitPrimarySecondaryMenu(sections);
@@ -219,6 +221,36 @@ const horizontal_header_sections = (
     )
   );
 
+const condensed_header_sections = (brand, sections, currentUrl, config) =>
+  header(
+    { class: "navbar navbar-expand-md d-print-none" },
+    div(
+      { class: "container-xl" },
+      button(
+        {
+          class: "navbar-toggler",
+          type: "button",
+          "data-bs-toggle": "collapse",
+          "data-bs-target": "#navbar-menu",
+        },
+        span({ class: "navbar-toggler-icon" })
+      ),
+      showBrand(brand),
+      div(
+        { class: "collapse navbar-collapse", id: "navbar-menu" },
+        div(
+          {
+            class:
+              "d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center",
+          },
+          div(
+            { class: "navbar-nav flex-row order-md-last" },
+            sections.map(sideBarSection(currentUrl))
+          )
+        )
+      )
+    )
+  );
 const vertical_header_sections = (brand, sections, currentUrl, config) =>
   aside(
     {
