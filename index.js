@@ -181,14 +181,6 @@ const blockDispatch = {
       h2({ class: "page-title" }, title),
       blurb && p({ class: "mb-0 text-gray-800" }, blurb)
     ),
-  card: ({ title, contents, footer }, go) =>
-    div(
-      { class: "card" },
-      title &&
-        div({ class: "card-header" }, h3({ class: "card-title" }, text(title))),
-      div({ class: "card-body" }, go(contents)),
-      footer && div({ class: "card-footer" }, go(footer))
-    ),
   footer: ({ contents }) =>
     div(
       { class: "container" },
