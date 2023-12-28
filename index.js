@@ -232,7 +232,7 @@ const vertical_header_sections = (brand, sections, currentUrl, config) =>
           class: "navbar-toggler",
           type: "button",
           "data-bs-toggle": "collapse",
-          "data-bs-target": "#navbar-menu",
+          "data-bs-target": "#sidebar-menu",
         },
         span({ class: "navbar-toggler-icon" })
       ),
