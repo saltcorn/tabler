@@ -426,21 +426,20 @@ const configuration_workflow = () =>
             saveAndContinueOption: true,
             fields: [
               {
-                name: "in_card",
-                label: "Default content in card?",
-                type: "Bool",
-                required: true,
-              },
-              {
-                name: "menu_style",
-                label: "Menu style",
+                name: "layout_style",
+                label: "Layout style",
                 type: "String",
                 required: true,
                 //fieldview: "radio_group",
                 attributes: {
                   inline: true,
-                  options: ["Top Navbar", "Side Navbar", "No Menu"],
+                  options: ["Horizontal", "Vertical", "Condensed", "Combined"],
                 },
+              },
+              {
+                name: "fluid",
+                label: "Fluid",
+                type: "Bool",
               },
             ],
           });
