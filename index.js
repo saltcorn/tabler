@@ -221,7 +221,10 @@ const horizontal_header_sections = (
 
 const vertical_header_sections = (brand, sections, currentUrl, config) =>
   aside(
-    { class: "navbar navbar-vertical navbar-expand-lg d-print-none" },
+    {
+      class: "navbar navbar-vertical navbar-expand-lg d-print-none",
+      "data-bs-theme": "dark",
+    },
     div(
       { class: "container-fluid" },
       button(
