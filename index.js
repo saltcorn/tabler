@@ -221,7 +221,7 @@ const blockDispatch = {
       )
     ),
 };
-const renderBody = (title, body, role) =>
+const renderBody = (title, body, role, config) =>
   renderLayout({
     blockDispatch,
     role,
@@ -372,32 +372,36 @@ const authWrap = ({
 </div>`
   );
 
-const wrap = ({
-  title,
-  menu,
-  brand,
-  alerts,
-  currentUrl,
-  body,
-  headers,
-  role,
-}) =>
-  wrapIt(
-    'class="antialiased"',
-    headers,
+const wrap =
+  (config) =>
+  ({
     title,
-    `<div id="page">
-        ${header_sections(brand, menu, currentUrl)}
+    menu,
+    brand,
+    alerts,
+    currentUrl,
+    body,
+    headers,
+    role,
+    req,
+    bodyClass,
+  }) =>
+    wrapIt(
+      `class="antialiased ${bodyClass || ""}"`,
+      headers,
+      title,
+      `<div id="page">
+        ${header_sections(brand, menu, currentUrl, config)}
         <div class="content">
             <div class="container-xl" id="page-inner-content">
             <div id="alerts-area">
               ${alerts.map((a) => alert(a.type, a.msg)).join("")}
             </div>
-            ${renderBody(title, body, role)}
+            ${renderBody(title, body, role, config)}
             </div>
         </div>
     </div>`
-  );
+    );
 
 const alert = (type, s) => {
   //console.log("alert", type, s,s.length)
@@ -446,10 +450,11 @@ const configuration_workflow = () =>
   });
 
 const layout = (config) => ({
-  wrap,
+  wrap: wrap(config),
   authWrap,
   hints,
-  renderBody: ({ title, body, alerts, role }) => renderBody(title, body, role),
+  renderBody: ({ title, body, alerts, role }) =>
+    renderBody(title, body, role, config),
 });
 
 module.exports = {
