@@ -70,7 +70,7 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
             {
               class: "nav-link dropdown-toggle",
               href: "#",
-              "data-toggle": "dropdown",
+              "data-bs-toggle": "dropdown",
               role: "button",
               "aria-expanded": "false",
             },
@@ -125,8 +125,8 @@ const header_sections = (brand, sections, currentUrl) =>
         {
           class: "navbar-toggler",
           type: "button",
-          "data-toggle": "collapse",
-          "data-target": "#navbar-menu",
+          "data-bs-toggle": "collapse",
+          "data-bs-target": "#navbar-menu",
         },
         span({ class: "navbar-toggler-icon" })
       ),
