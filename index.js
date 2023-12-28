@@ -118,7 +118,67 @@ const sideBarSection = (currentUrl) => (section) =>
     section.items.map(sideBarItem(currentUrl, section.items.length)).join(""),
   ];
 
-const header_sections = (brand, sections, currentUrl) =>
+const splitPrimarySecondaryMenu = (menu) => {
+  return {
+    primary: menu
+      .map((mi) => ({
+        ...mi,
+        items: mi.items.filter(
+          (item) => item.location !== "Secondary Menu" && mi.section !== "User"
+        ),
+      }))
+      .filter(({ items }) => items.length),
+    secondary: menu
+      .map((mi) => ({
+        ...mi,
+        items: mi.items.filter(
+          (item) => item.location === "Secondary Menu" || mi.section === "User"
+        ),
+      }))
+      .filter(({ items }) => items.length),
+  };
+};
+
+const showBrand = (brand) =>
+  a(
+    {
+      href: "/",
+      class:
+        "navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3",
+    },
+    brand.logo &&
+      img({
+        src: brand.logo,
+        alt: "Logo",
+        class: "navbar-brand-image mx-1",
+      }),
+    brand.name
+  );
+
+const header_sections = (brand, sections, currentUrl, config) => {
+  switch (config?.layout_style) {
+    case "Vertical":
+      break;
+
+    default: //Horizontal
+      const { primary, secondary } = splitPrimarySecondaryMenu(sections);
+      return horizontal_header_sections(
+        brand,
+        primary,
+        secondary,
+        currentUrl,
+        config
+      );
+  }
+};
+
+const horizontal_header_sections = (
+  brand,
+  primary,
+  secondary,
+  currentUrl,
+  config
+) =>
   header(
     { class: "navbar navbar-expand-md navbar-light d-print-none" },
     div(
@@ -132,26 +192,10 @@ const header_sections = (brand, sections, currentUrl) =>
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      a(
-        {
-          href: "/",
-          class:
-            "navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3",
-        },
-        brand.logo &&
-          img({
-            src: brand.logo,
-            alt: "Logo",
-            class: "navbar-brand-image mx-1",
-          }),
-        brand.name
-      ),
-
+      showBrand(brand),
       div(
         { class: "navbar-nav flex-row order-md-last" },
-        sections
-          .filter((s) => s.section === "User" || s.isUser)
-          .map(sideBarSection(currentUrl))
+        secondary.map(sideBarSection(currentUrl))
       )
     )
   ) +
@@ -167,9 +211,7 @@ const header_sections = (brand, sections, currentUrl) =>
             {
               class: "navbar-nav",
             },
-            sections
-              .filter((s) => s.section !== "User" && !s.isUser)
-              .map(sideBarSection(currentUrl))
+            primary.map(sideBarSection(currentUrl))
           )
         )
       )
