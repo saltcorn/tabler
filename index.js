@@ -30,6 +30,8 @@ const {
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
 
+const hints = {};
+
 const subItem = (currentUrl) => (item) =>
   li(
     item.link
@@ -107,11 +109,12 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
   );
 };
 
-const sideBarSection = (currentUrl) => (section) => [
-  //section.section &&
-  //  li({ class: "nav-header text-uppercase" }, section.section),
-  section.items.map(sideBarItem(currentUrl, section.items.length)).join(""),
-];
+const sideBarSection = (currentUrl) => (section) =>
+  [
+    //section.section &&
+    //  li({ class: "nav-header text-uppercase" }, section.section),
+    section.items.map(sideBarItem(currentUrl, section.items.length)).join(""),
+  ];
 
 const header_sections = (brand, sections, currentUrl) =>
   header(
@@ -228,6 +231,7 @@ const renderBody = (title, body, role) =>
   renderLayout({
     blockDispatch,
     role,
+    hints,
     layout:
       typeof body === "string"
         ? {
@@ -450,6 +454,8 @@ const configuration_workflow = () =>
 const layout = (config) => ({
   wrap,
   authWrap,
+  hints,
+  renderBody: ({ title, body, alerts, role }) => renderBody(title, body, role),
 });
 
 module.exports = {
