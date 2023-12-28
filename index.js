@@ -144,8 +144,7 @@ const showBrand = (brand) =>
   a(
     {
       href: "/",
-      class:
-        "navbar-brand navbar-brand-autodark d-none-navbar-horizontal pr-0 pr-md-3",
+      class: "navbar-brand navbar-brand-autodark d-none-navbar-horizontal",
     },
     brand.logo &&
       img({
