@@ -432,16 +432,10 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
 
     ${headersInBody(headers)}
     <style>
-      .form-group {
-        margin-bottom: 1rem;
-      }
-      .nav-link-icon {
-        margin-top: -8px;
-        margin-right: 3px;
-      }
-      ol.breadcrumb { 
-        margin-bottom: 0.5rem;
-      }
+      .form-group { margin-bottom: 1rem; }
+      .nav-link-icon { margin-top: -8px; margin-right: 3px; }
+      ol.breadcrumb { margin-bottom: 0.5rem; }
+      i.empty { display:none; }
     </style>
 </body>
 </html>`;
@@ -625,7 +619,6 @@ module.exports = {
 
 font
 menu editor looks weird
-padding below breadcrumbs
 avatar as user menu
 
 
