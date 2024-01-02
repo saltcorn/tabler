@@ -70,7 +70,9 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
     {
       class: ["nav-item", is_active && "active", item.subitems && "dropdown"],
     },
-    item.type === "Search"
+    item.type === "Separator"
+      ? hr({ class: "mx-3 my-1" })
+      : item.type === "Search"
       ? form(
           {
             action: "/search",
@@ -336,7 +338,7 @@ const vertical_header_sections = (brand, sections, currentUrl, config) =>
       ),
       div(
         { class: "collapse navbar-collapse", id: "sidebar-menu" },
-        div(
+        ul(
           { class: "navbar-nav pt-lg-3" },
           sections.map(sideBarSection(currentUrl))
         )
@@ -621,6 +623,7 @@ module.exports = {
 Menu search
 menu separator
 
+font
 menu editor looks weird
 add padding top of main contents - all layout styles
 padding below breadcrumbs
