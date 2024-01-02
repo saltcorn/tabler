@@ -33,6 +33,7 @@ const {
 } = require("@saltcorn/markup/layout_utils");
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
+const Table = require("@saltcorn/data/models/table");
 const db = require("@saltcorn/data/db");
 
 const hints = {};
@@ -64,8 +65,42 @@ const active = (currentUrl, item) =>
   (item.subitems &&
     item.subitems.some((si) => si.link && currentUrl.startsWith(si.link)));
 
-const sideBarItem = (currentUrl, nitems) => (item, ix) => {
+const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
   const is_active = active(currentUrl, item);
+  if (
+    item.isUser &&
+    config?.avatar_file &&
+    user &&
+    user[config?.avatar_file] &&
+    config?.layout_style !== "Vertical"
+  ) {
+    return li(
+      {
+        class: ["nav-item dropdown", is_active && "active"],
+      },
+      a(
+        {
+          class: "nav-link",
+          href: "#",
+          "data-bs-toggle": "dropdown",
+          role: "button",
+          "aria-expanded": "false",
+        },
+        span({
+          class: "avatar avatar-sm",
+          style: `background-image: url(/files/resize/64/64/${
+            user?.[config.avatar_file]
+          })`,
+        })
+      ),
+      ul(
+        {
+          class: ["dropdown-menu", ix === nitems - 1 && "dropdown-menu-end"],
+        },
+        item.subitems.map(subItem(currentUrl))
+      )
+    );
+  }
   return li(
     {
       class: ["nav-item", is_active && "active", item.subitems && "dropdown"],
@@ -138,11 +173,13 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
   );
 };
 
-const sideBarSection = (currentUrl) => (section) =>
+const sideBarSection = (currentUrl, config, user) => (section) =>
   [
     //section.section &&
     //  li({ class: "nav-header text-uppercase" }, section.section),
-    section.items.map(sideBarItem(currentUrl, section.items.length)).join(""),
+    section.items
+      .map(sideBarItem(currentUrl, config, user, section.items.length))
+      .join(""),
   ];
 
 const splitPrimarySecondaryMenu = (menu) => {
@@ -181,12 +218,24 @@ const showBrand = (brand) =>
     brand.name
   );
 
-const header_sections = (brand, sections, currentUrl, config) => {
+const header_sections = (brand, sections, currentUrl, config, user) => {
   switch (config?.layout_style) {
     case "Vertical":
-      return vertical_header_sections(brand, sections, currentUrl, config);
+      return vertical_header_sections(
+        brand,
+        sections,
+        currentUrl,
+        config,
+        user
+      );
     case "Condensed":
-      return condensed_header_sections(brand, sections, currentUrl, config);
+      return condensed_header_sections(
+        brand,
+        sections,
+        currentUrl,
+        config,
+        user
+      );
     case "Combined": {
       const { primary, secondary } = splitPrimarySecondaryMenu(sections);
       return combined_header_sections(
@@ -194,7 +243,8 @@ const header_sections = (brand, sections, currentUrl, config) => {
         primary,
         secondary,
         currentUrl,
-        config
+        config,
+        user
       );
     }
     default: //Horizontal
@@ -204,7 +254,8 @@ const header_sections = (brand, sections, currentUrl, config) => {
         primary,
         secondary,
         currentUrl,
-        config
+        config,
+        user
       );
   }
 };
@@ -214,7 +265,8 @@ const horizontal_header_sections = (
   primary,
   secondary,
   currentUrl,
-  config
+  config,
+  user
 ) =>
   header(
     { class: "navbar navbar-expand-md navbar-light d-print-none" },
@@ -232,7 +284,7 @@ const horizontal_header_sections = (
       showBrand(brand),
       div(
         { class: "navbar-nav flex-row order-md-last" },
-        secondary.map(sideBarSection(currentUrl))
+        secondary.map(sideBarSection(currentUrl, config, user))
       )
     )
   ) +
@@ -248,7 +300,7 @@ const horizontal_header_sections = (
             {
               class: "navbar-nav",
             },
-            primary.map(sideBarSection(currentUrl))
+            primary.map(sideBarSection(currentUrl, config, user))
           )
         )
       )
@@ -260,9 +312,10 @@ const combined_header_sections = (
   primary,
   secondary,
   currentUrl,
-  config
+  config,
+  user
 ) =>
-  vertical_header_sections(brand, primary, currentUrl, config) +
+  vertical_header_sections(brand, primary, currentUrl, config, user) +
   header(
     { class: "navbar navbar-expand-md d-none d-lg-flex d-print-none" },
     div(
@@ -278,13 +331,13 @@ const combined_header_sections = (
       ),
       div(
         { class: "navbar-nav flex-row order-md-last" },
-        secondary.map(sideBarSection(currentUrl))
+        secondary.map(sideBarSection(currentUrl, config, user))
       ),
       div({ class: "collapse navbar-collapse", id: "navbar-menu" })
     )
   );
 
-const condensed_header_sections = (brand, sections, currentUrl, config) =>
+const condensed_header_sections = (brand, sections, currentUrl, config, user) =>
   header(
     { class: "navbar navbar-expand-md d-print-none" },
     div(
@@ -308,13 +361,13 @@ const condensed_header_sections = (brand, sections, currentUrl, config) =>
           },
           div(
             { class: "navbar-nav flex-row order-md-last" },
-            sections.map(sideBarSection(currentUrl))
+            sections.map(sideBarSection(currentUrl, config, user))
           )
         )
       )
     )
   );
-const vertical_header_sections = (brand, sections, currentUrl, config) =>
+const vertical_header_sections = (brand, sections, currentUrl, config, user) =>
   aside(
     {
       class: "navbar navbar-vertical navbar-expand-lg d-print-none",
@@ -334,13 +387,13 @@ const vertical_header_sections = (brand, sections, currentUrl, config) =>
       showBrand(brand),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
-        sections.map(sideBarSection(currentUrl))
+        sections.map(sideBarSection(currentUrl, config, user))
       ),
       div(
         { class: "collapse navbar-collapse", id: "sidebar-menu" },
         ul(
           { class: "navbar-nav pt-lg-3" },
-          sections.map(sideBarSection(currentUrl))
+          sections.map(sideBarSection(currentUrl, config, user))
         )
       )
     )
@@ -559,7 +612,7 @@ const wrap =
       headers,
       title,
       `<div id="page">
-        ${header_sections(brand, menu, currentUrl, config)}
+        ${header_sections(brand, menu, currentUrl, config, req?.user)}
         <div class="page-wrapper">
             <div class="container-xl pt-2" id="page-inner-content">          
             ${renderBody(title, body, role, config, alerts)}
@@ -574,6 +627,8 @@ const configuration_workflow = () =>
       {
         name: "settings",
         form: async () => {
+          const userFields = Table.findOne("users").fields;
+
           return new Form({
             saveAndContinueOption: true,
             fields: [
@@ -592,6 +647,16 @@ const configuration_workflow = () =>
                 name: "fluid",
                 label: "Fluid",
                 type: "Bool",
+              },
+              {
+                name: "avatar_file",
+                label: "Avatar field",
+                sublabel:
+                  "A File field on the user table with the user's image",
+                type: "String",
+                attributes: {
+                  options: userFields.filter((f) => f.type === "File"),
+                },
               },
             ],
           });
@@ -618,7 +683,6 @@ module.exports = {
 /* TODO
 
 font
-menu editor looks weird
 avatar as user menu
 
 
