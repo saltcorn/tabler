@@ -318,7 +318,36 @@ const combined_header_sections = (
   config,
   user
 ) =>
-  vertical_header_sections(brand, primary, [], currentUrl, config, user) +
+  aside(
+    {
+      class: "navbar navbar-vertical navbar-expand-lg d-print-none",
+      "data-bs-theme": "dark",
+    },
+    div(
+      { class: "container-fluid" },
+      button(
+        {
+          class: "navbar-toggler",
+          type: "button",
+          "data-bs-toggle": "collapse",
+          "data-bs-target": "#sidebar-menu",
+        },
+        span({ class: "navbar-toggler-icon" })
+      ),
+      showBrand(brand),
+      div(
+        { class: "navbar-nav flex-row d-lg-none" },
+        secondary.map(sideBarSection(currentUrl, config, user))
+      ),
+      div(
+        { class: "collapse navbar-collapse", id: "sidebar-menu" },
+        ul(
+          { class: "navbar-nav pt-lg-3" },
+          primary.map(sideBarSection(currentUrl, config, user))
+        )
+      )
+    )
+  ) +
   header(
     { class: "navbar navbar-expand-md d-none d-lg-flex d-print-none" },
     div(
