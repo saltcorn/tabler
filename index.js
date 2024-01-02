@@ -402,9 +402,7 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
   <script src="/static_assets/${
     db.connectObj.version_tag
   }/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
-   integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
-   crossorigin="anonymous"></script>
+  <script src="/plugins/public/tabler${verstring}/popper.min.js"></script>
   <script src="/plugins/public/tabler${verstring}/tabler.min.js"></script>
 
     ${headersInBody(headers)}
