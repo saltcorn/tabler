@@ -489,6 +489,15 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
     <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.min.css">
     ${headersInHead(headers)}
     <title>${text(title)}</title>
+    <style>
+    @import url('https://rsms.me/inter/inter.css');
+    :root {
+      --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+    }
+    body {
+      font-feature-settings: "cv03", "cv04", "cv11";
+    }
+  </style>
   </head>
   <body ${bodyAttr}>
   ${body}
