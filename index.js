@@ -27,6 +27,7 @@ const { renderForm, link } = require("@saltcorn/markup");
 const {
   headersInHead,
   headersInBody,
+  alert,
 } = require("@saltcorn/markup/layout_utils");
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
@@ -365,11 +366,12 @@ const blockDispatch = {
       )
     ),
 };
-const renderBody = (title, body, role, config) =>
+const renderBody = (title, body, role, config, alerts) =>
   renderLayout({
     blockDispatch,
     role,
     hints,
+    alerts,
     layout:
       typeof body === "string"
         ? {
@@ -537,28 +539,12 @@ const wrap =
       `<div id="page">
         ${header_sections(brand, menu, currentUrl, config)}
         <div class="page-wrapper">
-            <div class="container-xl" id="page-inner-content">
-            <div id="alerts-area">
-              ${alerts.map((a) => alert(a.type, a.msg)).join("")}
-            </div>
-            ${renderBody(title, body, role, config)}
+            <div class="container-xl" id="page-inner-content">          
+            ${renderBody(title, body, role, config, alerts)}
             </div>
         </div>
     </div>`
     );
-
-const alert = (type, s) => {
-  //console.log("alert", type, s,s.length)
-  const realtype = type === "error" ? "danger" : type;
-  return s && s.length > 0
-    ? `<div class="alert alert-${realtype} alert-dismissible fade show" role="alert">
-  ${text(s)}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>`
-    : "";
-};
 
 const configuration_workflow = () =>
   new Workflow({
@@ -597,7 +583,7 @@ const layout = (config) => ({
   authWrap,
   hints,
   renderBody: ({ title, body, alerts, role }) =>
-    renderBody(title, body, role, config),
+    renderBody(title, body, role, config, alerts),
 });
 
 module.exports = {
@@ -606,3 +592,17 @@ module.exports = {
   configuration_workflow,
   layout,
 };
+
+/* TODO
+
+implement fluid cfg setting 
+Menu search
+icon picker in menu editor
+
+menu editor looks weird
+add padding top of main contents - all layout styles
+padding below breadcrumbs
+avatar as user menu
+
+
+*/
