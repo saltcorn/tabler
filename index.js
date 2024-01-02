@@ -533,7 +533,9 @@ const wrap =
     bodyClass,
   }) =>
     wrapIt(
-      `class="antialiased ${bodyClass || ""}"`,
+      `class="antialiased ${bodyClass || ""} ${
+        config?.fluid ? "layout-fluid" : ""
+      }"`,
       headers,
       title,
       `<div id="page">
@@ -595,7 +597,6 @@ module.exports = {
 
 /* TODO
 
-implement fluid cfg setting 
 Menu search
 icon picker in menu editor
 
