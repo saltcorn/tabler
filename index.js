@@ -219,18 +219,19 @@ const showBrand = (brand) =>
   );
 
 const header_sections = (brand, sections, currentUrl, config, user) => {
+  const { primary, secondary } = splitPrimarySecondaryMenu(sections);
+
   switch (config?.layout_style) {
     case "Vertical":
       return vertical_header_sections(
         brand,
-        sections,
+        primary,
+        secondary,
         currentUrl,
         config,
         user
       );
     case "Condensed": {
-      const { primary, secondary } = splitPrimarySecondaryMenu(sections);
-
       return condensed_header_sections(
         brand,
         primary,
@@ -240,8 +241,7 @@ const header_sections = (brand, sections, currentUrl, config, user) => {
         user
       );
     }
-    case "Combined": {
-      const { primary, secondary } = splitPrimarySecondaryMenu(sections);
+    case "Combined":
       return combined_header_sections(
         brand,
         primary,
@@ -250,9 +250,8 @@ const header_sections = (brand, sections, currentUrl, config, user) => {
         config,
         user
       );
-    }
+
     default: //Horizontal
-      const { primary, secondary } = splitPrimarySecondaryMenu(sections);
       return horizontal_header_sections(
         brand,
         primary,
@@ -319,7 +318,7 @@ const combined_header_sections = (
   config,
   user
 ) =>
-  vertical_header_sections(brand, primary, currentUrl, config, user) +
+  vertical_header_sections(brand, primary, [], currentUrl, config, user) +
   header(
     { class: "navbar navbar-expand-md d-none d-lg-flex d-print-none" },
     div(
@@ -382,7 +381,14 @@ const condensed_header_sections = (
       )
     )
   );
-const vertical_header_sections = (brand, sections, currentUrl, config, user) =>
+const vertical_header_sections = (
+  brand,
+  primary,
+  secondary,
+  currentUrl,
+  config,
+  user
+) =>
   aside(
     {
       class: "navbar navbar-vertical navbar-expand-lg d-print-none",
@@ -402,13 +408,15 @@ const vertical_header_sections = (brand, sections, currentUrl, config, user) =>
       showBrand(brand),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
-        sections.map(sideBarSection(currentUrl, config, user))
+        secondary.map(sideBarSection(currentUrl, config, user))
       ),
       div(
         { class: "collapse navbar-collapse", id: "sidebar-menu" },
         ul(
           { class: "navbar-nav pt-lg-3" },
-          sections.map(sideBarSection(currentUrl, config, user))
+          [...primary, ...secondary].map(
+            sideBarSection(currentUrl, config, user)
+          )
         )
       )
     )
@@ -706,8 +714,7 @@ module.exports = {
 
 /* TODO
 
-font
-avatar as user menu
-
+menu on mobile: 
+-combined
 
 */
