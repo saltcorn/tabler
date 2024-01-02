@@ -439,6 +439,9 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
         margin-top: -8px;
         margin-right: 3px;
       }
+      ol.breadcrumb { 
+        margin-bottom: 0.5rem;
+      }
     </style>
 </body>
 </html>`;
@@ -564,7 +567,7 @@ const wrap =
       `<div id="page">
         ${header_sections(brand, menu, currentUrl, config)}
         <div class="page-wrapper">
-            <div class="container-xl" id="page-inner-content">          
+            <div class="container-xl pt-2" id="page-inner-content">          
             ${renderBody(title, body, role, config, alerts)}
             </div>
         </div>
@@ -620,12 +623,8 @@ module.exports = {
 
 /* TODO
 
-Menu search
-menu separator
-
 font
 menu editor looks weird
-add padding top of main contents - all layout styles
 padding below breadcrumbs
 avatar as user menu
 
