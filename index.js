@@ -228,14 +228,18 @@ const header_sections = (brand, sections, currentUrl, config, user) => {
         config,
         user
       );
-    case "Condensed":
+    case "Condensed": {
+      const { primary, secondary } = splitPrimarySecondaryMenu(sections);
+
       return condensed_header_sections(
         brand,
-        sections,
+        primary,
+        secondary,
         currentUrl,
         config,
         user
       );
+    }
     case "Combined": {
       const { primary, secondary } = splitPrimarySecondaryMenu(sections);
       return combined_header_sections(
@@ -337,7 +341,14 @@ const combined_header_sections = (
     )
   );
 
-const condensed_header_sections = (brand, sections, currentUrl, config, user) =>
+const condensed_header_sections = (
+  brand,
+  primary,
+  secondary,
+  currentUrl,
+  config,
+  user
+) =>
   header(
     { class: "navbar navbar-expand-md d-print-none" },
     div(
@@ -353,15 +364,19 @@ const condensed_header_sections = (brand, sections, currentUrl, config, user) =>
       ),
       showBrand(brand),
       div(
+        { class: "navbar-nav flex-row order-md-last" },
+        secondary.map(sideBarSection(currentUrl, config, user))
+      ),
+      div(
         { class: "collapse navbar-collapse", id: "navbar-menu" },
         div(
           {
             class:
               "d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center",
           },
-          div(
-            { class: "navbar-nav flex-row order-md-last" },
-            sections.map(sideBarSection(currentUrl, config, user))
+          ul(
+            { class: "navbar-nav" },
+            primary.map(sideBarSection(currentUrl, config, user))
           )
         )
       )
