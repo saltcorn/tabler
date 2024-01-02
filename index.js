@@ -21,6 +21,8 @@ const {
   nav,
   img,
   aside,
+  form,
+  input,
 } = require("@saltcorn/markup/tags");
 const renderLayout = require("@saltcorn/markup/layout");
 const { renderForm, link } = require("@saltcorn/markup");
@@ -68,7 +70,28 @@ const sideBarItem = (currentUrl, nitems) => (item, ix) => {
     {
       class: ["nav-item", is_active && "active", item.subitems && "dropdown"],
     },
-    item.subitems
+    item.type === "Search"
+      ? form(
+          {
+            action: "/search",
+            class: "menusearch ms-2",
+            method: "get",
+            autocomplete: "off",
+            novalidate: "",
+          },
+          div(
+            { class: "input-icon" },
+            span({ class: "input-icon-addon" }, i({ class: "fas fa-search" })),
+            input({
+              type: "text",
+              value: "",
+              class: "form-control",
+              placeholder: "Search…",
+              "aria-label": "Search in website",
+            })
+          )
+        )
+      : item.subitems
       ? [
           a(
             {
@@ -596,7 +619,7 @@ module.exports = {
 /* TODO
 
 Menu search
-icon picker in menu editor
+menu separator
 
 menu editor looks weird
 add padding top of main contents - all layout styles
