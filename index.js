@@ -100,6 +100,35 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
         item.subitems.map(subItem(currentUrl))
       )
     );
+  } else if (item.isUser && user?.email) {
+    return li(
+      {
+        class: ["nav-item dropdown", is_active && "active"],
+      },
+      a(
+        {
+          class: "nav-link",
+          href: "#",
+          "data-bs-toggle": "dropdown",
+          role: "button",
+          "aria-expanded": "false",
+        },
+        div(
+          {
+            class: "h3 mb-0",
+            style:
+              "border-radius: 50%; background-color: #d5d5d5; width: 40px; height:40px; display: flex;align-items: center; justify-content: center;",
+          },
+          user.email[0].toUpperCase()
+        )
+      ),
+      ul(
+        {
+          class: ["dropdown-menu", ix === nitems - 1 && "dropdown-menu-end"],
+        },
+        item.subitems.map(subItem(currentUrl))
+      )
+    );
   }
   return li(
     {
