@@ -1,6 +1,6 @@
 {
   "name": "@saltcorn/tabler",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "tabler.io layout plugin",
   "main": "index.js",
   "scripts": {
