@@ -525,10 +525,11 @@ const blockDispatch = {
       )
     ),
 };
-const renderBody = (title, body, role, config, alerts) =>
+const renderBody = (title, body, role, config, alerts, req) =>
   renderLayout({
     blockDispatch,
     role,
+    req,
     hints,
     alerts,
     layout:
@@ -705,7 +706,7 @@ const wrap =
         ${header_sections(brand, menu, currentUrl, config, req?.user)}
         <div class="page-wrapper">
             <div class="container-xl pt-2" id="page-inner-content">          
-            ${renderBody(title, body, role, config, alerts)}
+            ${renderBody(title, body, role, config, alerts, req)}
             </div>
         </div>
     </div>`
@@ -759,8 +760,8 @@ const layout = (config) => ({
   wrap: wrap(config),
   authWrap,
   hints,
-  renderBody: ({ title, body, alerts, role }) =>
-    renderBody(title, body, role, config, alerts),
+  renderBody: ({ title, body, alerts, role, req }) =>
+    renderBody(title, body, role, config, alerts, req),
 });
 
 module.exports = {
