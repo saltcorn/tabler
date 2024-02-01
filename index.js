@@ -693,12 +693,13 @@ const wrap =
     body,
     headers,
     role,
+    requestFluidLayout,
     req,
     bodyClass,
   }) =>
     wrapIt(
       `class="antialiased ${bodyClass || ""} ${
-        config?.fluid ? "layout-fluid" : ""
+        config?.fluid || requestFluidLayout ? "layout-fluid" : ""
       }"`,
       headers,
       title,
