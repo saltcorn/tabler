@@ -100,7 +100,11 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
         item.subitems.map(subItem(currentUrl))
       )
     );
-  } else if (item.isUser && user?.email) {
+  } else if (
+    item.isUser &&
+    user?.email &&
+    config?.layout_style !== "Vertical"
+  ) {
     return li(
       {
         class: ["nav-item dropdown", is_active && "active"],
