@@ -251,7 +251,7 @@ const showBrand = (brand) =>
     brand.name
   );
 
-const header_sections = (brand, sections, currentUrl, config, user) => {
+const header_sections = (brand, sections, currentUrl, config, user, title) => {
   const { primary, secondary } = splitPrimarySecondaryMenu(sections);
 
   switch (config?.layout_style) {
@@ -281,7 +281,8 @@ const header_sections = (brand, sections, currentUrl, config, user) => {
         secondary,
         currentUrl,
         config,
-        user
+        user,
+        title
       );
 
     default: //Horizontal
@@ -349,7 +350,8 @@ const combined_header_sections = (
   secondary,
   currentUrl,
   config,
-  user
+  user,
+  title
 ) =>
   aside(
     {
@@ -394,6 +396,8 @@ const combined_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
+      config.show_title &&
+        div({ class: "navbar-nav flex-row pt-3 ps-1" }, h3(text(title))),
       div(
         { class: "navbar-nav flex-row order-md-last" },
         secondary.map(sideBarSection(currentUrl, config, user))
@@ -708,7 +712,7 @@ const wrap =
       headers,
       title,
       `<div id="page">
-        ${header_sections(brand, menu, currentUrl, config, req?.user)}
+        ${header_sections(brand, menu, currentUrl, config, req?.user, title)}
         <div class="page-wrapper">
             <div class="container-xl pt-2" id="page-inner-content">          
             ${renderBody(title, body, role, config, alerts, req)}
@@ -738,6 +742,13 @@ const configuration_workflow = () =>
                   inline: true,
                   options: ["Horizontal", "Vertical", "Condensed", "Combined"],
                 },
+              },
+              {
+                name: "show_title",
+                label: "Show title",
+                sublabel: "Show title in header",
+                type: "Bool",
+                showIf: { layout_style: "Combined" },
               },
               {
                 name: "fluid",
