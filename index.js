@@ -36,7 +36,9 @@ const Form = require("@saltcorn/data/models/form");
 const Table = require("@saltcorn/data/models/table");
 const db = require("@saltcorn/data/db");
 
-const hints = {};
+const hints = {
+  cardTitleClass: "card-title",
+};
 const verstring = "@" + require("./package.json").version;
 
 const subItem = (currentUrl) => (item) =>
