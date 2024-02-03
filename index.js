@@ -49,7 +49,9 @@ const subItem = (currentUrl) => (item) =>
             class: ["dropdown-item", active(currentUrl, item) && "active"],
             href: text(item.link),
           },
-          item.icon ? i({ class: `me-1 fa-fw ${item.icon}` }) : "",
+          item.icon && item.icon !== "empty"
+            ? i({ class: `me-1 fa-fw ${item.icon}` })
+            : "",
           item.label
         )
       : span({ class: "dropdown-header" }, item.label)
@@ -195,8 +197,14 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
         ]
       : item.link
       ? a(
-          { class: ["nav-link"], href: text(item.link) },
-          item.icon
+          {
+            class: [
+              item.style && item.style.includes("btn") ? "ms-2" : "nav-link",
+              item.style || "",
+            ],
+            href: text(item.link),
+          },
+          item.icon && item.icon !== "empty"
             ? span(
                 { class: "nav-link-icon" },
                 i({ class: `mt-2 fa-fw ${item.icon}` })
