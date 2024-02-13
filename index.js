@@ -262,7 +262,7 @@ const showBrand = (brand) =>
   );
 
 const header_sections = (brand, sections, currentUrl, config, user, title) => {
-  const { primary, secondary } = splitPrimarySecondaryMenu(sections);
+  const { primary, secondary } = splitPrimarySecondaryMenu(sections || []);
 
   switch (config?.layout_style) {
     case "Vertical":
@@ -328,7 +328,7 @@ const horizontal_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      showBrand(brand),
+      brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row order-md-last" },
         secondary.map(sideBarSection(currentUrl, config, user))
@@ -379,7 +379,7 @@ const combined_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      showBrand(brand),
+      brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
         secondary.map(sideBarSection(currentUrl, config, user))
@@ -437,7 +437,7 @@ const condensed_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      showBrand(brand),
+      brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row order-md-last" },
         secondary.map(sideBarSection(currentUrl, config, user))
@@ -481,7 +481,7 @@ const vertical_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      showBrand(brand),
+      brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
         secondary.map(sideBarSection(currentUrl, config, user))
