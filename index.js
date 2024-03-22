@@ -550,15 +550,7 @@ const renderBody = (title, body, role, config, alerts, req) =>
     req,
     hints,
     alerts,
-    layout:
-      typeof body === "string"
-        ? {
-            above: [
-              { type: "pageHeader", title },
-              { type: "card", contents: body },
-            ],
-          }
-        : body,
+    layout: body,
   });
 const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
 <html lang="en">
