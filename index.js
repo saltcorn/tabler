@@ -169,7 +169,7 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
       ? [
           a(
             {
-              class: "nav-link dropdown-toggle",
+              class: ["nav-link dropdown-toggle", is_active && "show"],
               href: "#",
               "data-bs-toggle": "dropdown",
               role: "button",
@@ -189,6 +189,7 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
               class: [
                 "dropdown-menu",
                 ix === nitems - 1 && "dropdown-menu-end",
+                is_active && "show",
               ],
             },
 
