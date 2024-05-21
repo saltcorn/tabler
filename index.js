@@ -269,6 +269,7 @@ const showBrand = (brand) =>
   );
 
 const header_sections = (brand, sections, currentUrl, config, user, title) => {
+  if (!sections && !brand) return "";
   const { primary, secondary } = splitPrimarySecondaryMenu(sections || []);
 
   switch (config?.layout_style) {
