@@ -365,8 +365,12 @@ const combined_header_sections = (
 ) =>
   aside(
     {
-      class: "navbar navbar-vertical navbar-expand-lg d-print-none",
-      "data-bs-theme": "dark",
+      class: [
+        "navbar navbar-vertical navbar-expand-lg d-print-none",
+        config.sidebar_background === "Transparent" && "navbar-transparent",
+      ],
+      "data-bs-theme":
+        config.sidebar_background === "Dark" ? "dark" : undefined,
     },
     div(
       { class: "container-fluid" },
@@ -467,8 +471,12 @@ const vertical_header_sections = (
 ) =>
   aside(
     {
-      class: "navbar navbar-vertical navbar-expand-lg d-print-none",
-      "data-bs-theme": "dark",
+      class: [
+        "navbar navbar-vertical navbar-expand-lg d-print-none",
+        config.sidebar_background === "Transparent" && "navbar-transparent",
+      ],
+      "data-bs-theme":
+        config.sidebar_background === "Dark" ? undefined : "dark",
     },
     div(
       { class: "container-fluid" },
@@ -751,6 +759,14 @@ const configuration_workflow = () =>
                 sublabel: "Show title in header",
                 type: "Bool",
                 showIf: { layout_style: "Combined" },
+              },
+              {
+                name: "sidebar_background",
+                label: "Sidebar background",
+                type: "String",
+                attributes: { options: ["Dark", "Light", "Transparent"] },
+                required: true,
+                showIf: { layout_style: ["Combined", "Vertical"] },
               },
               {
                 name: "fluid",
