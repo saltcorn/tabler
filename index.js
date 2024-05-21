@@ -184,7 +184,7 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
             item.icon
               ? span(
                   { class: "nav-link-icon" },
-                  i({ class: `mt-2 fa-fw ${item.icon}` })
+                  i({ class: `fa-fw ${item.icon}` })
                 )
               : "",
             span({ class: "nav-link-title" }, text(item.label))
@@ -213,7 +213,7 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
           item.icon && item.icon !== "empty"
             ? span(
                 { class: "nav-link-icon" },
-                i({ class: `mt-2 fa-fw ${item.icon}` })
+                i({ class: `fa-fw ${item.icon}` })
               )
             : "",
           text(item.label)
@@ -588,6 +588,10 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
     body {
       font-feature-settings: "cv03", "cv04", "cv11";
     }
+    span.nav-link-icon i.fa-fw {
+      margin-top: 0.4rem;
+    }
+
   </style>
   </head>
   <body ${bodyAttr}>
