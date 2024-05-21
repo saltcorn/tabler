@@ -724,7 +724,9 @@ const wrap =
       `<div id="page">
         ${header_sections(brand, menu, currentUrl, config, req?.user, title)}
         <div class="page-wrapper">
-            <div class="container-xl pt-2" id="page-inner-content">          
+            <div class="container-xl pt-2 bg-${(
+              config.content_background || "Transparent"
+            ).toLowerCase()}" id="page-inner-content">
             ${renderBody(title, body, role, config, alerts, req)}
             </div>
         </div>
@@ -764,9 +766,16 @@ const configuration_workflow = () =>
                 name: "sidebar_background",
                 label: "Sidebar background",
                 type: "String",
-                attributes: { options: ["Dark", "Light", "Transparent"] },
+                attributes: { options: ["Dark", "White", "Transparent"] },
                 required: true,
                 showIf: { layout_style: ["Combined", "Vertical"] },
+              },
+              {
+                name: "content_background",
+                label: "Content background",
+                type: "String",
+                attributes: { options: ["Transparent", "Light", "White"] },
+                required: true,
               },
               {
                 name: "fluid",
