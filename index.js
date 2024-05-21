@@ -177,6 +177,7 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
               class: ["nav-link dropdown-toggle", is_active && "show"],
               href: "#",
               "data-bs-toggle": "dropdown",
+              "data-bs-auto-close": "false",
               role: "button",
               "aria-expanded": "false",
             },
