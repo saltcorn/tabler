@@ -590,9 +590,8 @@ const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
     body {
       font-feature-settings: "cv03", "cv04", "cv11";
     }
-    span.nav-link-icon i.fa-fw {
-      margin-top: 0.4rem;
-    }
+    span.nav-link-icon i.fa-fw { margin-top: 0.4rem; }
+    .badge.bg-secondary { color: white; }
 
   </style>
   </head>
