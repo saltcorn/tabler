@@ -74,7 +74,7 @@ const active = (currentUrl, item) =>
         (si.altlinks && si.altlinks.some((l) => currentUrl.startsWith(l)))
     ));
 
-const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
+const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
   const is_active = active(currentUrl, item);
   if (
     item.isUser &&
@@ -174,7 +174,10 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
       ? [
           a(
             {
-              class: ["nav-link dropdown-toggle", is_active && "show"],
+              class: [
+                "nav-link dropdown-toggle",
+                is_active && !horiz && "show",
+              ],
               href: "#",
               "data-bs-toggle": "dropdown",
               "data-bs-auto-close": "false",
@@ -195,7 +198,7 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
               class: [
                 "dropdown-menu",
                 ix === nitems - 1 && "dropdown-menu-end",
-                is_active && "show",
+                is_active && !horiz && "show",
               ],
             },
 
@@ -223,12 +226,12 @@ const sideBarItem = (currentUrl, config, user, nitems) => (item, ix) => {
   );
 };
 
-const sideBarSection = (currentUrl, config, user) => (section) =>
+const sideBarSection = (currentUrl, config, user, horiz) => (section) =>
   [
     //section.section &&
     //  li({ class: "nav-header text-uppercase" }, section.section),
     section.items
-      .map(sideBarItem(currentUrl, config, user, section.items.length))
+      .map(sideBarItem(currentUrl, config, user, section.items.length, horiz))
       .join(""),
   ];
 
@@ -339,7 +342,7 @@ const horizontal_header_sections = (
       brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row order-md-last" },
-        secondary.map(sideBarSection(currentUrl, config, user))
+        secondary.map(sideBarSection(currentUrl, config, user, true))
       )
     )
   ) +
@@ -355,7 +358,7 @@ const horizontal_header_sections = (
             {
               class: "navbar-nav",
             },
-            primary.map(sideBarSection(currentUrl, config, user))
+            primary.map(sideBarSection(currentUrl, config, user, true))
           )
         )
       )
@@ -394,7 +397,7 @@ const combined_header_sections = (
       brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
-        secondary.map(sideBarSection(currentUrl, config, user))
+        secondary.map(sideBarSection(currentUrl, config, user, true))
       ),
       div(
         { class: "collapse navbar-collapse", id: "sidebar-menu" },
@@ -422,7 +425,7 @@ const combined_header_sections = (
         div({ class: "navbar-nav flex-row pt-3 ps-1" }, h3(text(title))),
       div(
         { class: "navbar-nav flex-row order-md-last" },
-        secondary.map(sideBarSection(currentUrl, config, user))
+        secondary.map(sideBarSection(currentUrl, config, user, true))
       ),
       div({ class: "collapse navbar-collapse", id: "navbar-menu" })
     )
@@ -452,7 +455,7 @@ const condensed_header_sections = (
       brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row order-md-last" },
-        secondary.map(sideBarSection(currentUrl, config, user))
+        secondary.map(sideBarSection(currentUrl, config, user, true))
       ),
       div(
         { class: "collapse navbar-collapse", id: "navbar-menu" },
@@ -463,7 +466,7 @@ const condensed_header_sections = (
           },
           ul(
             { class: "navbar-nav" },
-            primary.map(sideBarSection(currentUrl, config, user))
+            primary.map(sideBarSection(currentUrl, config, user, true))
           )
         )
       )
@@ -500,7 +503,7 @@ const vertical_header_sections = (
       brand && showBrand(brand),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
-        secondary.map(sideBarSection(currentUrl, config, user))
+        secondary.map(sideBarSection(currentUrl, config, user, true))
       ),
       div(
         { class: "collapse navbar-collapse", id: "sidebar-menu" },
