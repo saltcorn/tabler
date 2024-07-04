@@ -256,7 +256,7 @@ const splitPrimarySecondaryMenu = (menu) => {
   };
 };
 
-const showBrand = (brand) =>
+const showBrand = (brand, config) =>
   a(
     {
       href: "/",
@@ -268,7 +268,7 @@ const showBrand = (brand) =>
         alt: "Logo",
         class: "navbar-brand-image mx-1",
       }),
-    brand.name
+    !config?.hide_site_name && brand.name
   );
 
 const header_sections = (brand, sections, currentUrl, config, user, title) => {
@@ -339,7 +339,7 @@ const horizontal_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      brand && showBrand(brand),
+      brand && showBrand(brand, config),
       div(
         { class: "navbar-nav flex-row order-md-last" },
         secondary.map(sideBarSection(currentUrl, config, user, true))
@@ -394,7 +394,7 @@ const combined_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      brand && showBrand(brand),
+      brand && showBrand(brand, config),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
         secondary.map(sideBarSection(currentUrl, config, user, true))
@@ -452,7 +452,7 @@ const condensed_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      brand && showBrand(brand),
+      brand && showBrand(brand, config),
       div(
         { class: "navbar-nav flex-row order-md-last" },
         secondary.map(sideBarSection(currentUrl, config, user, true))
@@ -500,7 +500,7 @@ const vertical_header_sections = (
         },
         span({ class: "navbar-toggler-icon" })
       ),
-      brand && showBrand(brand),
+      brand && showBrand(brand, config),
       div(
         { class: "navbar-nav flex-row d-lg-none" },
         secondary.map(sideBarSection(currentUrl, config, user, true))
@@ -805,6 +805,11 @@ const configuration_workflow = () =>
                 attributes: {
                   options: userFields.filter((f) => f.type === "File"),
                 },
+              },
+              {
+                name: "hide_site_name",
+                label: "Hide site name from menu",
+                type: "Bool",
               },
             ],
           });
