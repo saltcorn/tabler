@@ -571,8 +571,8 @@ const renderBody = (title, body, role, config, alerts, req) =>
     alerts,
     layout: body,
   });
-const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
-<html lang="en">
+const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
+<html lang="en" data-bs-theme="${config?.mode || "light"}">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -658,22 +658,15 @@ const authBrand = ({ name, logo }) =>
     <img src="${logo}" class="h-6" alt=""><h2 class="d-inline mx-3">${name}</h2>
   </div>`
     : "";
-
-const authWrap = ({
-  title,
-  alerts,
-  form,
-  afterForm,
-  brand,
-  headers,
-  csrfToken,
-  authLinks,
-}) =>
-  wrapIt(
-    "",
-    headers,
-    title,
-    `<div class="page">
+const authWrap =
+  (config) =>
+  ({ title, alerts, form, afterForm, brand, headers, csrfToken, authLinks }) =>
+    wrapIt(
+      config,
+      "",
+      headers,
+      title,
+      `<div class="page">
   <div class="page-single">
     <div class="container">
       <div class="row">
@@ -712,7 +705,7 @@ const authWrap = ({
 }
   </style>
 </div>`
-  );
+    );
 
 const wrap =
   (config) =>
@@ -730,6 +723,7 @@ const wrap =
     bodyClass,
   }) =>
     wrapIt(
+      config,
       `class="antialiased ${bodyClass || ""} ${
         config?.fluid || requestFluidLayout ? "layout-fluid" : ""
       }"`,
@@ -811,12 +805,45 @@ const configuration_workflow = () =>
                 label: "Hide site name from menu",
                 type: "Bool",
               },
+              {
+                name: "mode",
+                label: "Mode",
+                type: "String",
+                required: true,
+                default: "light",
+                attributes: {
+                  options: [
+                    { name: "light", label: "Light" },
+                    { name: "dark", label: "Dark" },
+                  ],
+                },
+              },
             ],
           });
         },
       },
     ],
   });
+
+const userConfigForm = async (ctx) => {
+  return new Form({
+    fields: [
+      {
+        name: "mode",
+        label: "Mode",
+        type: "String",
+        required: true,
+        default: ctx.mode || "light",
+        attributes: {
+          options: [
+            { name: "light", label: "Light" },
+            { name: "dark", label: "Dark" },
+          ],
+        },
+      },
+    ],
+  });
+};
 
 const layout = (config) => ({
   wrap: wrap(config),
@@ -830,6 +857,7 @@ module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "tabler",
   configuration_workflow,
+  user_config_form: userConfigForm,
   layout,
 };
 
