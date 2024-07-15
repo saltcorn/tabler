@@ -34,7 +34,11 @@ const {
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
 const Table = require("@saltcorn/data/models/table");
+const Plugin = require("@saltcorn/data/models/plugin");
+const User = require("@saltcorn/data/models/user");
 const db = require("@saltcorn/data/db");
+const { sleep } = require("@saltcorn/data/utils");
+const { getState } = require("@saltcorn/data/db/state");
 
 const hints = {
   cardTitleClass: "card-title",
@@ -859,6 +863,45 @@ module.exports = {
   configuration_workflow,
   user_config_form: userConfigForm,
   layout,
+  actions: () => ({
+    toggle_tabler_dark_mode: {
+      description: "Switch between dark and light mode",
+      configFields: [],
+      run: async ({ user, req }) => {
+        let plugin = await Plugin.findOne({ name: "tabler" });
+        if (!plugin) {
+          plugin = await Plugin.findOne({
+            name: "@saltcorn/tabler",
+          });
+        }
+        const dbUser = await User.findOne({ id: user.id });
+        const attrs = dbUser._attributes || {};
+        const userLayout = attrs.layout || {
+          config: {},
+        };
+        userLayout.plugin = plugin.name;
+        const currentMode = userLayout.config.mode
+          ? userLayout.config.mode
+          : plugin.configuration?.mode
+          ? plugin.configuration.mode
+          : "light";
+        userLayout.config.mode = currentMode === "dark" ? "light" : "dark";
+        userLayout.config.is_user_config = true;
+        attrs.layout = userLayout;
+        await dbUser.update({ _attributes: attrs });
+        getState().processSend({
+          refresh_plugin_cfg: plugin.name,
+          tenant: db.getTenantSchema(),
+        });
+        getState().userLayouts[user.email] = layout({
+          ...(plugin.configuration ? plugin.configuration : {}),
+          ...userLayout.config,
+        });
+        await sleep(500); // Allow other workers to reload this plugin
+        return { reload_page: true };
+      },
+    },
+  }),
 };
 
 /* TODO
