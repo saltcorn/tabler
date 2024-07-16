@@ -34,7 +34,11 @@ const {
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
 const Table = require("@saltcorn/data/models/table");
+const Plugin = require("@saltcorn/data/models/plugin");
+const User = require("@saltcorn/data/models/user");
 const db = require("@saltcorn/data/db");
+const { sleep } = require("@saltcorn/data/utils");
+const { getState } = require("@saltcorn/data/db/state");
 
 const hints = {
   cardTitleClass: "card-title",
@@ -571,8 +575,8 @@ const renderBody = (title, body, role, config, alerts, req) =>
     alerts,
     layout: body,
   });
-const wrapIt = (bodyAttr, headers, title, body) => `<!doctype html>
-<html lang="en">
+const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
+<html lang="en" data-bs-theme="${config?.mode || "light"}">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -658,22 +662,15 @@ const authBrand = ({ name, logo }) =>
     <img src="${logo}" class="h-6" alt=""><h2 class="d-inline mx-3">${name}</h2>
   </div>`
     : "";
-
-const authWrap = ({
-  title,
-  alerts,
-  form,
-  afterForm,
-  brand,
-  headers,
-  csrfToken,
-  authLinks,
-}) =>
-  wrapIt(
-    "",
-    headers,
-    title,
-    `<div class="page">
+const authWrap =
+  (config) =>
+  ({ title, alerts, form, afterForm, brand, headers, csrfToken, authLinks }) =>
+    wrapIt(
+      config,
+      "",
+      headers,
+      title,
+      `<div class="page">
   <div class="page-single">
     <div class="container">
       <div class="row">
@@ -712,7 +709,7 @@ const authWrap = ({
 }
   </style>
 </div>`
-  );
+    );
 
 const wrap =
   (config) =>
@@ -730,6 +727,7 @@ const wrap =
     bodyClass,
   }) =>
     wrapIt(
+      config,
       `class="antialiased ${bodyClass || ""} ${
         config?.fluid || requestFluidLayout ? "layout-fluid" : ""
       }"`,
@@ -811,12 +809,45 @@ const configuration_workflow = () =>
                 label: "Hide site name from menu",
                 type: "Bool",
               },
+              {
+                name: "mode",
+                label: "Mode",
+                type: "String",
+                required: true,
+                default: "light",
+                attributes: {
+                  options: [
+                    { name: "light", label: "Light" },
+                    { name: "dark", label: "Dark" },
+                  ],
+                },
+              },
             ],
           });
         },
       },
     ],
   });
+
+const userConfigForm = async (ctx) => {
+  return new Form({
+    fields: [
+      {
+        name: "mode",
+        label: "Mode",
+        type: "String",
+        required: true,
+        default: ctx.mode || "light",
+        attributes: {
+          options: [
+            { name: "light", label: "Light" },
+            { name: "dark", label: "Dark" },
+          ],
+        },
+      },
+    ],
+  });
+};
 
 const layout = (config) => ({
   wrap: wrap(config),
@@ -830,7 +861,47 @@ module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "tabler",
   configuration_workflow,
+  user_config_form: userConfigForm,
   layout,
+  actions: () => ({
+    toggle_tabler_dark_mode: {
+      description: "Switch between dark and light mode",
+      configFields: [],
+      run: async ({ user, req }) => {
+        let plugin = await Plugin.findOne({ name: "tabler" });
+        if (!plugin) {
+          plugin = await Plugin.findOne({
+            name: "@saltcorn/tabler",
+          });
+        }
+        const dbUser = await User.findOne({ id: user.id });
+        const attrs = dbUser._attributes || {};
+        const userLayout = attrs.layout || {
+          config: {},
+        };
+        userLayout.plugin = plugin.name;
+        const currentMode = userLayout.config.mode
+          ? userLayout.config.mode
+          : plugin.configuration?.mode
+          ? plugin.configuration.mode
+          : "light";
+        userLayout.config.mode = currentMode === "dark" ? "light" : "dark";
+        userLayout.config.is_user_config = true;
+        attrs.layout = userLayout;
+        await dbUser.update({ _attributes: attrs });
+        getState().processSend({
+          refresh_plugin_cfg: plugin.name,
+          tenant: db.getTenantSchema(),
+        });
+        getState().userLayouts[user.email] = layout({
+          ...(plugin.configuration ? plugin.configuration : {}),
+          ...userLayout.config,
+        });
+        await sleep(500); // Allow other workers to reload this plugin
+        return { reload_page: true };
+      },
+    },
+  }),
 };
 
 /* TODO
