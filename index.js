@@ -662,15 +662,22 @@ const authBrand = ({ name, logo }) =>
     <img src="${logo}" class="h-6" alt=""><h2 class="d-inline mx-3">${name}</h2>
   </div>`
     : "";
-const authWrap =
-  (config) =>
-  ({ title, alerts, form, afterForm, brand, headers, csrfToken, authLinks }) =>
-    wrapIt(
-      config,
-      "",
-      headers,
-      title,
-      `<div class="page">
+const authWrap = ({
+  title,
+  alerts,
+  form,
+  afterForm,
+  brand,
+  headers,
+  csrfToken,
+  authLinks,
+}) =>
+  wrapIt(
+    {}, //config unknown
+    "",
+    headers,
+    title,
+    `<div class="page">
   <div class="page-single">
     <div class="container">
       <div class="row">
@@ -709,7 +716,7 @@ const authWrap =
 }
   </style>
 </div>`
-    );
+  );
 
 const wrap =
   (config) =>
