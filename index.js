@@ -189,7 +189,7 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
               "aria-expanded": "false",
             },
             //i({ class: "fas fa-fw fa-wrench" }),
-            item.icon
+            item.icon && item.icon !== "empty" && item.icon !== "undefined"
               ? span(
                   { class: "nav-link-icon" },
                   i({ class: `fa-fw ${item.icon}` })
