@@ -587,7 +587,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.min.css">
-    ${headersInHead(headers)}
+    ${headersInHead(headers, config?.mode === "dark")}
     <title>${text(title)}</title>
     <style>
     @import url('https://rsms.me/inter/inter.css');
