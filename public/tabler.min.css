@@ -63,18 +63,18 @@ a.navbar-brand {
   border-right: 1px solid var(--tblr-border-color-translucent) !important;
   border-radius: 0 var(--tblr-border-radius) var(--tblr-border-radius) 0;
 }
-[data-bs-theme="light"] .badge.bg-primary {
+.badge.bg-primary {
   color: var(--tblr-blue-fg);
 }
-[data-bs-theme="light"] .badge.bg-success {
+.badge.bg-success {
   color: var(--tblr-green-fg);
 }
-[data-bs-theme="light"] .badge.bg-warning {
+.badge.bg-warning {
   color: var(--tblr-orange-fg);
 }
-[data-bs-theme="light"] .badge.bg-info {
+.badge.bg-info {
   color: var(--tblr-azure-fg);
 }
-[data-bs-theme="light"] .badge.bg-danger {
+.badge.bg-danger {
   color: var(--tblr-red-fg);
 }
