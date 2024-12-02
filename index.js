@@ -132,9 +132,9 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
         },
         div(
           {
-            class: "h3 mb-0",
+            class: "h3 mb-0 bg-muted text-muted-fg",
             style:
-              "border-radius: 50%; background-color: #d5d5d5; width: 40px; height:40px; display: flex;align-items: center; justify-content: center;",
+              "border-radius: 50%; width: 40px; height:40px; display: flex;align-items: center; justify-content: center;",
           },
           user.email[0].toUpperCase()
         )
