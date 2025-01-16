@@ -584,15 +584,13 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="/plugins/public/tabler${verstring}/fontawesome/fontawesome.min.css" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.min.css">
     ${headersInHead(headers, config?.mode === "dark")}
     <title>${text(title)}</title>
     <style>
-    @import url('https://rsms.me/inter/inter.css');
+    @import url('/plugins/public/tabler${verstring}/inter/inter.css');
     :root {
-      --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      --tblr-font-sans-serif: 'InterVariable', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
     }
     body {
       font-feature-settings: "cv03", "cv04", "cv11";
