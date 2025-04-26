@@ -30,6 +30,7 @@ const {
   headersInHead,
   headersInBody,
   alert,
+  activeChecker,
 } = require("@saltcorn/markup/layout_utils");
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
@@ -68,14 +69,20 @@ const logit = (x, s) => {
   else console.log(x);
   return x;
 };
+
+// when the function from base is not yet available
+const _activeChecker = activeChecker
+  ? activeChecker
+  : (link, currentUrl) => new RegExp(`^${link}(\\/|\\?|#|$)`).test(currentUrl);
+
 const active = (currentUrl, item) =>
-  (item.link && currentUrl.startsWith(item.link)) ||
-  (item.altlinks && item.altlinks.some((l) => currentUrl.startsWith(l))) ||
+  (item.link && _activeChecker(item.link, currentUrl)) ||
+  (item.altlinks && item.altlinks.some((l) => _activeChecker(l, currentUrl))) ||
   (item.subitems &&
     item.subitems.some(
       (si) =>
-        (si.link && currentUrl.startsWith(si.link)) ||
-        (si.altlinks && si.altlinks.some((l) => currentUrl.startsWith(l)))
+        (si.link && _activeChecker(si.link, currentUrl)) ||
+        (si.altlinks && si.altlinks.some((l) => _activeChecker(l, currentUrl)))
     ));
 
 const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
