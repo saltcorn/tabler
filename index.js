@@ -582,7 +582,9 @@ const renderBody = (title, body, role, config, alerts, req) =>
     alerts,
     layout: body,
   });
-const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
+const wrapIt = (config, bodyAttr, headers, title, body) => {
+  config["backgroundColorDark"] = "#182433";
+  return `<!doctype html>
 <html lang="en" data-bs-theme="${config?.mode || "light"}">
   <head>
     <!-- Required meta tags -->
@@ -604,7 +606,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     }
     span.nav-link-icon i.fa-fw { margin-top: 0.4rem; }
     .badge.bg-secondary { color: white; }
-
+    .tabulator { font-size: 14px; }
   </style>
   </head>
   <body ${bodyAttr}>
@@ -624,6 +626,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     </style>
 </body>
 </html>`;
+};
 
 const renderAuthLinks = (authLinks) => {
   var links = [];
