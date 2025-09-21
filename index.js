@@ -582,7 +582,9 @@ const renderBody = (title, body, role, config, alerts, req) =>
     alerts,
     layout: body,
   });
-const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
+const wrapIt = (config, bodyAttr, headers, title, body) => {
+  config["backgroundColorDark"] = "#182433";
+  return `<!doctype html>
 <html lang="en" data-bs-theme="${config?.mode || "light"}">
   <head>
     <!-- Required meta tags -->
@@ -604,7 +606,109 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     }
     span.nav-link-icon i.fa-fw { margin-top: 0.4rem; }
     .badge.bg-secondary { color: white; }
-
+    .tabulator { font-size: 14px; }
+    input.form-control.bg-light {
+      background-color: var(--tblr-gray-dark) !important;
+      color: var(--tblr-white) !important;
+    }
+        [data-bs-theme="dark"] .css-26l3qy-menu {
+      background-color: var(--tblr-gray-dark) !important;
+      border: 1px solid var(--tblr-border-color) !important;
+    }
+    [data-bs-theme="dark"] .css-yt9ioa-option:hover {
+      background-color: var(--tblr-gray-700) !important;
+      color: var(--tblr-white) !important;
+    }
+    [data-bs-theme="dark"] .css-1n7v3ny-option {
+      background-color: var(--tblr-gray-700) !important;
+    }
+    [data-bs-theme="dark"] .css-yk16xz-control {
+      background-color: var(--tblr-body-bg);
+      border-color: var(--tblr-border-color) !important;
+    }
+    [data-bs-theme="dark"] .css-1pahdxg-control {
+      background-color: var(--tblr-body-bg) !important;
+    }
+    [data-bs-theme="dark"] .css-1uccc91-singleValue {
+      color: #fefefe !important;
+    }
+    [data-bs-theme="dark"] .css-8mmkcg {
+      fill: var(--tblr-gray-300) !important;
+    }
+    
+    
+    /* Icons selector */
+    [data-bs-theme="dark"] .rfipbtn--default {
+      background-color: var(--tblr-gray-dark);
+      border: 1px solid var(--tblr-border-color);
+    }
+    [data-bs-theme="dark"] .rfipbtn--default .rfipbtn__button {
+      border-left: 1px solid var(--tblr-border-color);
+      background-color: var(--tblr-gray-dark-bg-subtle);
+      color: #e0e0e0;
+    }
+    [data-bs-theme="dark"] .rfipbtn--default .rfipbtn__button:hover {
+      background-color: var(--tblr-gray-dark-bg-subtle);
+      color: #e0e0e0;
+    }
+    [data-bs-theme="dark"] .rfipbtn--default:active,
+    [data-bs-theme="dark"] .rfipbtn--default:focus {
+      border: 1px solid var(--tblr-primary);
+    }
+    [data-bs-theme="dark"] .rfipdropdown--default {
+      -webkit-box-shadow: 0 15px 24px rgba(0, 0, 0, .22), 0 19px 76px rgba(0, 0, 0, .3);
+      box-shadow: 0 15px 24px rgba(0, 0, 0, .22), 0 19px 76px rgba(0, 0, 0, .3);
+      color: var(--tblr-white);
+      background-color: var(--tblr-gray-dark);
+      border: 1px solid var(--tblr-border-color);
+    }
+    [data-bs-theme="dark"] .rfipdropdown--default input, .rfipdropdown--default select {
+      color: var(--tblr-white);
+      background-color: var(--tblr-gray-700);
+    }
+    [data-bs-theme="dark"] 
+      .rfipdropdown--default .rfipicons__ibox,
+    [data-bs-theme="dark"] 
+      .rfipdropdown--default .rfipicons__left,
+    [data-bs-theme="dark"] 
+      .rfipdropdown--default .rfipicons__right {
+      background-color: var(--tblr-gray-800);
+      border: 1px solid var(--tblr-border-color);
+      color: var(--tblr-white);
+    }
+    [data-bs-theme="dark"] 
+      .rfipdropdown--default .rfipicons__ibox:hover,
+    [data-bs-theme="dark"] 
+      .rfipdropdown--default .rfipicons__left:hover,
+    [data-bs-theme="dark"] 
+      .rfipdropdown--default .rfipicons__right:hover {
+      background-color: var(--tblr-gray-dark);
+      color: var(--tblr-white);
+    }
+    [data-bs-theme="dark"] 
+    .rfipbtn--default .rfipbtn__icon {
+      border: 1px solid var(--tblr-border-color);
+      color: var(--tblr-white);
+    }
+    [data-bs-theme="dark"] 
+    .rfipbtn--default .rfipbtn__del {
+      background-color: var(--tblr-border-color);
+    }  
+    [data-bs-theme="dark"] 
+    .rfipbtn--default .rfipbtn__del:hover {
+        background-color: var(--tblr-gray-500);
+    }
+    [data-bs-theme="dark"] 
+    .rfipdropdown--default .rfipicons__icon--selected .rfipicons__ibox {
+      background-color: var(--tblr-primary);
+    }
+    /* Layers section single element hover class */
+    [data-bs-theme="dark"]
+    .bpkdMP,
+    [data-bs-theme="dark"]
+    .sc-bxivhb .coudsU {
+      background: var(--tblr-gray-700);
+    }
   </style>
   </head>
   <body ${bodyAttr}>
@@ -624,6 +728,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     </style>
 </body>
 </html>`;
+};
 
 const renderAuthLinks = (authLinks) => {
   var links = [];
@@ -759,6 +864,10 @@ const wrap =
 
 const configuration_workflow = () =>
   new Workflow({
+    // onDone: (ctx) => {
+    //   ctx.backgroundColorDarkCtx0 = "#182433";
+    //   return ctx;
+    // },
     steps: [
       {
         name: "settings",
