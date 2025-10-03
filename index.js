@@ -590,12 +590,12 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="/plugins/public/tableradh${verstring}/fontawesome/fontawesome.min.css" />
-    <link rel="stylesheet" href="/plugins/public/tableradh${verstring}/tabler.min.css">
+    <link rel="stylesheet" href="/plugins/public/saltcorn-tableradh${verstring}/fontawesome/fontawesome.min.css" />
+    <link rel="stylesheet" href="/plugins/public/saltcorn-tableradh${verstring}/tabler.min.css">
     ${headersInHead(headers, config?.mode === "dark")}
     <title>${text(title)}</title>
     <style>
-    @import url('/plugins/public/tableradh${verstring}/inter/inter.css');
+    @import url('/plugins/public/saltcorn-tableradh${verstring}/inter/inter.css');
     :root {
       --tblr-font-sans-serif: 'InterVariable', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
     }
@@ -612,8 +612,8 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
   <script src="/static_assets/${
     db.connectObj.version_tag
   }/jquery-3.6.0.min.js"></script>
-  <script src="/plugins/public/tableradh${verstring}/popper.min.js"></script>
-  <script src="/plugins/public/tableradh${verstring}/tabler.min.js"></script>
+  <script src="/plugins/public/saltcorn-tableradh${verstring}/popper.min.js"></script>
+  <script src="/plugins/public/saltcorn-tableradh${verstring}/tabler.min.js"></script>
 
     ${headersInBody(headers)}
     <style>
