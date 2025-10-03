@@ -1,6 +1,6 @@
 {
   "name": "tableradh",
-  "version": "0.5.6-adh1",
+  "version": "0.5.6",
   "description": "Tabler theme for Adhere.ly — Brian's fork",
   "main": "index.js",
   "scripts": {
