@@ -871,7 +871,7 @@ const layout = (config) => ({
 
 module.exports = {
   sc_plugin_api_version: 1,
-  plugin_name: "tabler",
+  plugin_name: "tableradh",
   configuration_workflow,
   user_config_form: userConfigForm,
   layout,

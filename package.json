@@ -1,7 +1,7 @@
 {
-  "name": "@saltcorn/tabler",
-  "version": "0.5.6",
-  "description": "tabler.io layout plugin",
+  "name": "tableradh",
+  "version": "0.5.6-adh1",
+  "description": "Tabler theme for Adhere.ly — Brian's fork",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -10,12 +10,12 @@
     "@saltcorn/data": "^0.2.0",
     "@saltcorn/markup": "^0.2.0"
   },
-  "author": "Tom Nielsen",
+  "author": "Brian Bunnell",
   "license": "MIT",
   "devDependencies": {
     "jest": "^25.1.0"
   },
-  "repository": "github:saltcorn/tabler",
+  "repository": "github:brianadherely/tableradh",
   "jest": {
     "testEnvironment": "node"
   },
