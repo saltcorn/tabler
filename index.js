@@ -759,6 +759,10 @@ const wrap =
 
 const configuration_workflow = () =>
   new Workflow({
+    onDone: (ctx) => {
+      ctx.backgroundColorDark = "rgb(21, 31, 44)";
+      return ctx;
+    },
     steps: [
       {
         name: "settings",
