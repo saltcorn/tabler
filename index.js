@@ -901,13 +901,10 @@ module.exports = {
         userLayout.config.is_user_config = true;
         attrs.layout = userLayout;
         await dbUser.update({ _attributes: attrs });
+        await db.commitAndBeginNewTransaction?.();
         getState().processSend({
           refresh_plugin_cfg: plugin.name,
           tenant: db.getTenantSchema(),
-        });
-        getState().userLayouts[user.email] = layout({
-          ...(plugin.configuration ? plugin.configuration : {}),
-          ...userLayout.config,
         });
         await sleep(500); // Allow other workers to reload this plugin
         return { reload_page: true };
