@@ -46,13 +46,25 @@ const hints = {
 };
 const verstring = "@" + require("./package.json").version;
 
-const subItem = (currentUrl) => (item) =>
-  li(
+const subItem = (currentUrl, config, user) => (item) => {
+  const layout_style = config?.layout_style || "Horizontal";
+  const isUserItem = item.type === "User Page" && user;
+  return li(
     item.link
       ? a(
           {
             class: ["dropdown-item", active(currentUrl, item) && "active"],
             href: text(item.link),
+            ...(item.tooltip
+              ? {
+                  "data-bs-toggle": "tooltip",
+                  title: item.tooltip,
+                  "data-bs-placement":
+                    isUserItem && layout_style !== "Vertical"
+                      ? "left"
+                      : "right",
+                }
+              : {}),
           },
           item.icon && item.icon !== "empty" && item.icon !== "undefined"
             ? i({ class: `me-1 fa-fw ${item.icon}` })
@@ -61,6 +73,7 @@ const subItem = (currentUrl) => (item) =>
         )
       : span({ class: "dropdown-header" }, item.label)
   );
+};
 
 const labelToId = (item) => text(item.label.replace(" ", ""));
 
@@ -117,7 +130,7 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
         {
           class: ["dropdown-menu", ix === nitems - 1 && "dropdown-menu-end"],
         },
-        item.subitems.map(subItem(currentUrl))
+        item.subitems.map(subItem(currentUrl, config, user))
       )
     );
   } else if (
@@ -128,6 +141,9 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
     return li(
       {
         class: ["nav-item dropdown", is_active && "active"],
+        ...(item.tooltip
+          ? { "data-bs-toggle": "tooltip", title: item.tooltip }
+          : {}),
       },
       a(
         {
@@ -150,7 +166,7 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
         {
           class: ["dropdown-menu", ix === nitems - 1 && "dropdown-menu-end"],
         },
-        item.subitems.map(subItem(currentUrl))
+        item.subitems.map(subItem(currentUrl, config, user))
       )
     );
   }
@@ -213,7 +229,7 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
               ],
             },
 
-            item.subitems.map(subItem(currentUrl))
+            item.subitems.map(subItem(currentUrl, config, user))
           ),
         ]
       : item.link
@@ -224,6 +240,9 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
               item.style || "",
             ],
             href: text(item.link),
+            ...(item.tooltip
+              ? { "data-bs-toggle": "tooltip", title: item.tooltip, "data-bs-placement": horiz ? "bottom" : "right" }
+              : {}),
           },
           item.icon && item.icon !== "empty" && item.icon !== "undefined"
             ? span(
