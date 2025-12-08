@@ -275,7 +275,10 @@ const splitPrimarySecondaryMenu = (menu) => {
       .map((mi) => ({
         ...mi,
         items: mi.items.filter(
-          (item) => item.location !== "Secondary Menu" && mi.section !== "User"
+          (item) =>
+            item.location !== "Secondary Menu" &&
+            mi.section !== "User" &&
+            !mi.isUser
         ),
       }))
       .filter(({ items }) => items.length),
@@ -283,7 +286,10 @@ const splitPrimarySecondaryMenu = (menu) => {
       .map((mi) => ({
         ...mi,
         items: mi.items.filter(
-          (item) => item.location === "Secondary Menu" || mi.section === "User"
+          (item) =>
+            item.location === "Secondary Menu" ||
+            mi.section === "User" ||
+            mi.isUser
         ),
       }))
       .filter(({ items }) => items.length),
@@ -606,9 +612,9 @@ const renderBody = (title, body, role, config, alerts, req) =>
     layout: body,
   });
 const wrapIt = (config, bodyAttr, headers, title, body, req) => `<!doctype html>
-<html lang="${req?.getLocale?.() || "en"}" data-bs-theme="${config?.mode || "light"}" ${
-  req?.isRTL ? ' dir="rtl"' : ""
-}>
+<html lang="${req?.getLocale?.() || "en"}" data-bs-theme="${
+  config?.mode || "light"
+}" ${req?.isRTL ? ' dir="rtl"' : ""}>
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -616,7 +622,9 @@ const wrapIt = (config, bodyAttr, headers, title, body, req) => `<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="/plugins/public/tabler${verstring}/fontawesome/fontawesome.min.css" />
-    <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.${req?.isRTL?"rtl.":""}min.css">
+    <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.${
+  req?.isRTL ? "rtl." : ""
+}min.css">
     ${headersInHead(headers, config?.mode === "dark")}
     <title>${text(title)}</title>
     <style>
@@ -933,7 +941,7 @@ module.exports = {
         await dbUser.update({ _attributes: attrs });
         await db.commitAndBeginNewTransaction?.();
         await getState().refreshUserLayouts?.();
-        await dbUser.relogin(req);        
+        await dbUser.relogin(req);
         return { reload_page: true };
       },
     },
