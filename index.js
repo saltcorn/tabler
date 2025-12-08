@@ -932,11 +932,8 @@ module.exports = {
         attrs.layout = userLayout;
         await dbUser.update({ _attributes: attrs });
         await db.commitAndBeginNewTransaction?.();
-        getState().processSend({
-          refresh_plugin_cfg: plugin.name,
-          tenant: db.getTenantSchema(),
-        });
-        await sleep(500); // Allow other workers to reload this plugin
+        await getState().refreshUserLayouts?.();
+        await dbUser.relogin(req);        
         return { reload_page: true };
       },
     },
