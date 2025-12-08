@@ -241,7 +241,11 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
             ],
             href: text(item.link),
             ...(item.tooltip
-              ? { "data-bs-toggle": "tooltip", title: item.tooltip, "data-bs-placement": horiz ? "bottom" : "right" }
+              ? {
+                  "data-bs-toggle": "tooltip",
+                  title: item.tooltip,
+                  "data-bs-placement": horiz ? "bottom" : "right",
+                }
               : {}),
           },
           item.icon && item.icon !== "empty" && item.icon !== "undefined"
@@ -601,8 +605,10 @@ const renderBody = (title, body, role, config, alerts, req) =>
     alerts,
     layout: body,
   });
-const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
-<html lang="en" data-bs-theme="${config?.mode || "light"}">
+const wrapIt = (config, bodyAttr, headers, title, body, req) => `<!doctype html>
+<html lang="${req?.getLocale?.() || "en"}" data-bs-theme="${config?.mode || "light"}" ${
+  req?.isRTL ? ' dir="rtl"' : ""
+}>
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -610,7 +616,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="/plugins/public/tabler${verstring}/fontawesome/fontawesome.min.css" />
-    <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.min.css">
+    <link rel="stylesheet" href="/plugins/public/tabler${verstring}/tabler.${req?.isRTL?"rtl.":""}min.css">
     ${headersInHead(headers, config?.mode === "dark")}
     <title>${text(title)}</title>
     <style>
@@ -773,7 +779,8 @@ const wrap =
             ${renderBody(title, body, role, config, alerts, req)}
             </div>
         </div>
-    </div>`
+    </div>`,
+      req
     );
 
 const configuration_workflow = () =>
