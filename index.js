@@ -630,7 +630,7 @@ const wrapIt = (config, bodyAttr, headers, title, body, req) => `<!doctype html>
     <style>
     @import url('/plugins/public/tabler${verstring}/inter/inter.css');
     :root {
-      --tblr-font-sans-serif: 'InterVariable', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      --bs-font-sans-serif: 'InterVariable', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
     }
     body {
       font-feature-settings: "cv03", "cv04", "cv11";

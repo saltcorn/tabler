@@ -16,53 +16,53 @@ a.navbar-brand {
   border-radius: 12px;
 }
 .table.table-card-rows.table-hover > tbody > tr:hover > * {
-  --tblr-table-bg-state: transparent !important;
+  --bs-table-bg-state: transparent !important;
 }
 .table.table-card-rows thead th {
   background-color: #e9edfa;
-  border-block: 1px solid var(--tblr-border-color-translucent) !important;
+  border-block: 1px solid var(--bs-border-color-translucent) !important;
   padding: 18px 15px;
   font-size: 14px;
   font-weight: 600;
   background-color: #44484b10;
 }
 .table.table-card-rows thead th:first-child {
-  border-left: 1px solid var(--tblr-border-color-translucent) !important;
-  border-radius: var(--tblr-border-radius) 0 0 var(--tblr-border-radius);
+  border-left: 1px solid var(--bs-border-color-translucent) !important;
+  border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);
 }
 .table.table-card-rows thead th:last-child {
-  border-right: 1px solid var(--tblr-border-color-translucent) !important;
-  border-radius: 0 var(--tblr-border-radius) var(--tblr-border-radius) 0;
+  border-right: 1px solid var(--bs-border-color-translucent) !important;
+  border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
 }
 .table.table-card-rows tbody td {
-  border-block: 1px solid var(--tblr-border-color-translucent) !important;
+  border-block: 1px solid var(--bs-border-color-translucent) !important;
   position: relative;
   z-index: 11;
   padding: 15px 15px;
   font-size: 14px;
-  background-color: var(--tblr-white);
+  background-color: var(--bs-white);
 }
 .table.table-card-rows tbody td:first-child {
-  border-left: 1px solid var(--tblr-border-color-translucent) !important;
-  border-radius: var(--tblr-border-radius) 0 0 var(--tblr-border-radius);
+  border-left: 1px solid var(--bs-border-color-translucent) !important;
+  border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);
 }
 .table.table-card-rows tbody td:last-child {
-  border-right: 1px solid var(--tblr-border-color-translucent) !important;
-  border-radius: 0 var(--tblr-border-radius) var(--tblr-border-radius) 0;
+  border-right: 1px solid var(--bs-border-color-translucent) !important;
+  border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
 }
 
 [data-bs-theme="light"] .badge.bg-primary {
-  color: var(--tblr-blue-fg);
+  color: var(--bs-blue-fg);
 }
 [data-bs-theme="light"] .badge.bg-success {
-  color: var(--tblr-green-fg);
+  color: var(--bs-green-fg);
 }
 [data-bs-theme="light"] .badge.bg-warning {
-  color: var(--tblr-orange-fg);
+  color: var(--bs-orange-fg);
 }
 [data-bs-theme="light"] .badge.bg-info {
-  color: var(--tblr-azure-fg);
+  color: var(--bs-azure-fg);
 }
 [data-bs-theme="light"] .badge.bg-danger {
-  color: var(--tblr-red-fg);
+  color: var(--bs-red-fg);
 }
