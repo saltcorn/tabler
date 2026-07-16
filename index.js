@@ -46,9 +46,58 @@ const hints = {
 };
 const verstring = "@" + require("./package.json").version;
 
-const subItem = (currentUrl, config, user) => (item) => {
+const subItem = (currentUrl, config, user, horiz) => (item) => {
   const layout_style = config?.layout_style || "Horizontal";
   const isUserItem = item.type === "User Page" && user;
+  const showIcon = item.icon && item.icon !== "empty" && item.icon !== "undefined";
+  // Nested submenu: a dropdown-item that itself opens a further dropdown-menu.
+  // Bootstrap 5 (which Tabler is built on) dropped native submenu support, so
+  // we build the nested dropdown ourselves: the wrapping <li> carries the
+  // `dropend` class to become an independent dropdown context that flies out
+  // to the side, and subItem recurses for the children.
+  if (item.subitems && item.subitems.length) {
+    const is_active = active(currentUrl, item);
+    // In a vertical/collapsed sidebar, keep the whole active path expanded so the
+    // current page's ancestors stay open (as the top-level items already do).
+    const keepOpen = is_active && !horiz;
+    return li(
+      { class: ["dropdown", "dropend", "dropdown-submenu"] },
+      a(
+        {
+          class: [
+            "dropdown-item dropdown-toggle",
+            is_active && "active",
+            keepOpen && "show",
+          ],
+          href: text(item.link || "#"),
+          "data-bs-toggle": "dropdown",
+          "data-bs-auto-close": "outside",
+          role: "button",
+          "aria-expanded": keepOpen ? "true" : "false",
+          ...(item.tooltip
+            ? { title: item.tooltip }
+            : {}),
+        },
+        showIcon ? i({ class: `me-1 fa-fw ${item.icon}` }) : "",
+        item.label
+      ),
+      ul(
+        {
+          // `show` is stripped by Bootstrap's dropdown JS on nested menus, so we
+          // also add our own class that forces the active path to stay expanded
+          // in the vertical sidebar (see sc-submenu-open CSS).
+          class: [
+            "dropdown-menu",
+            keepOpen && "show",
+            keepOpen && "sc-submenu-open",
+          ],
+        },
+        item.subitems.map(subItem(currentUrl, config, user, horiz))
+      )
+    );
+  }
+  if (item.type === "Separator")
+    return li(hr({ class: "dropdown-divider" }));
   return li(
     item.link
       ? a(
@@ -66,9 +115,7 @@ const subItem = (currentUrl, config, user) => (item) => {
                 }
               : {}),
           },
-          item.icon && item.icon !== "empty" && item.icon !== "undefined"
-            ? i({ class: `me-1 fa-fw ${item.icon}` })
-            : "",
+          showIcon ? i({ class: `me-1 fa-fw ${item.icon}` }) : "",
           item.label
         )
       : span({ class: "dropdown-header" }, item.label)
@@ -92,11 +139,7 @@ const active = (currentUrl, item) =>
   (item.link && _activeChecker(item.link, currentUrl)) ||
   (item.altlinks && item.altlinks.some((l) => _activeChecker(l, currentUrl))) ||
   (item.subitems &&
-    item.subitems.some(
-      (si) =>
-        (si.link && _activeChecker(si.link, currentUrl)) ||
-        (si.altlinks && si.altlinks.some((l) => _activeChecker(l, currentUrl)))
-    ));
+    item.subitems.some((si) => active(currentUrl, si)));
 
 const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
   const is_active = active(currentUrl, item);
@@ -130,7 +173,7 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
         {
           class: ["dropdown-menu", ix === nitems - 1 && "dropdown-menu-end"],
         },
-        item.subitems.map(subItem(currentUrl, config, user))
+        item.subitems.map(subItem(currentUrl, config, user, true))
       )
     );
   } else if (
@@ -166,7 +209,7 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
         {
           class: ["dropdown-menu", ix === nitems - 1 && "dropdown-menu-end"],
         },
-        item.subitems.map(subItem(currentUrl, config, user))
+        item.subitems.map(subItem(currentUrl, config, user, true))
       )
     );
   }
@@ -229,7 +272,7 @@ const sideBarItem = (currentUrl, config, user, nitems, horiz) => (item, ix) => {
               ],
             },
 
-            item.subitems.map(subItem(currentUrl, config, user))
+            item.subitems.map(subItem(currentUrl, config, user, horiz))
           ),
         ]
       : item.link
@@ -635,9 +678,13 @@ const wrapIt = (config, bodyAttr, headers, title, body, req) => `<!doctype html>
     body {
       font-feature-settings: "cv03", "cv04", "cv11";
     }
-    span.nav-link-icon i.fa-fw { margin-top: 0.4rem; }
-    .badge.bg-secondary { color: white; }
-
+    ${
+      config?.submenu_on_hover === false
+        ? "/* Sub-menu hover disabled */"
+        : `@media (hover: hover) and (pointer: fine) {
+      .dropdown-submenu:hover > .dropdown-menu { display: block; }
+    }`
+    }
   </style>
   </head>
   <body ${bodyAttr}>
@@ -823,6 +870,14 @@ const configuration_workflow = () =>
                 sublabel: "Show title in header",
                 type: "Bool",
                 showIf: { layout_style: "Combined" },
+              },
+              {
+                name: "submenu_on_hover",
+                label: "Open sub-menus on hover",
+                sublabel:
+                  "Reveal nested drop-down sub-menus on mouse hover (desktop). When off, they open on click only. Click and keyboard always work either way.",
+                type: "Bool",
+                default: true,
               },
               {
                 name: "sidebar_background",
